@@ -1,5 +1,5 @@
 from os import environ
-from src.utils import init_env_vars
+from src.utils import init_env_vars, create_secret_config
 import requests
 
 def create_request(search_term=None, date_from=None):
@@ -36,6 +36,7 @@ def get_status_code(request=None):
 
 
 if __name__ == '__main__':
+    create_secret_config()
     init_env_vars()
 
     search_term = 'machine learning'
