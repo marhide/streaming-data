@@ -1,6 +1,7 @@
 brief.md
 secrets.txt
 secrets.ini
+secret_config.ini
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
