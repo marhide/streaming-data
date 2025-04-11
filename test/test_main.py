@@ -1,7 +1,7 @@
 from src.main import get_status_code, create_request
-from src.init_env import init_environment
+from src.utils import init_env_vars
 
-init_environment()
+init_env_vars()
 
 #test create_request
 

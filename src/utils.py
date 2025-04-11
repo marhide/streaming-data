@@ -1,7 +1,7 @@
 from configparser import ConfigParser
 from os import environ
 
-def init_environment():
+def init_env_vars():
 
     config_files_to_read = [
         'config.ini', 

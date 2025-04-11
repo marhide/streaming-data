@@ -1,5 +1,5 @@
 from os import environ
-from src.init_env import init_environment
+from src.utils import init_env_vars
 import requests
 
 def create_request(search_term=None, date_from=None):
@@ -26,7 +26,6 @@ def create_request(search_term=None, date_from=None):
 
     return request
 
-
 def get_status_code(request=None):
 
     if request == None:
@@ -37,7 +36,7 @@ def get_status_code(request=None):
 
 
 if __name__ == '__main__':
-    init_environment()
+    init_env_vars()
 
     search_term = 'machine learning'
     date_from = '2023-01-01'
