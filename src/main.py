@@ -2,7 +2,7 @@ from os import environ
 from src.init_env import init_environment
 import requests
 
-def get_status_code():
+def get_request():
     request = (
         environ['deafault_url'], 
         {
@@ -10,7 +10,11 @@ def get_status_code():
             'format': environ['response_format']
         }
     )
+    return request
 
+
+def get_status_code():
+    request = get_request()
     response = requests.get(*request)
     return response.status_code
 
