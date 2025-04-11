@@ -6,6 +6,8 @@ PYTHONPATH=${WD}
 SHELL := /bin/bash
 PROFILE = default
 PIP:=pip
+VENV = venv
+PYTHON = $(VENV)/bin/python3
 
 ## Create python interpreter environment.
 create-environment:
@@ -53,7 +55,7 @@ coverage:
 ## Set up dev requirements (bandit, safety, black)
 dev-setup: bandit safety black coverage
 
-# Build / Run
+setup: create-environment dev-setup
 
 ## Run the security test (bandit + safety)
 security-test:
