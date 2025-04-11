@@ -40,4 +40,4 @@ jobs:
         echo -e "[secrets]\nguardian_api_key = test" >> secret_config.ini
         # export pythonpath and run pytest
         export PYTHONPATH=$(pwd)
-        pytest test/test.py -vvvrP
+        pytest -vvvrP
