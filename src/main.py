@@ -1,23 +1,20 @@
-from configparser import ConfigParser
+from os import environ
+from src.init_env import init_environment
 import requests
 
-config_files_to_read = [
-    'config.ini', 
-    'secret_config.ini'
-    ]
-
-config = ConfigParser()
-config.read(config_files_to_read)
-
-api_key = config['secrets']['guardian_api_key']
-response_format = config['headers']['format']
-url = config['url']['deafault_url']
-
-headers = {
-    'api-key': api_key,
-    'format': response_format
-}
-
 def get_status_code():
-    response = requests.get(url, headers)
+    request = (
+        environ['deafault_url'], 
+        {
+            'api-key': environ['api_key'],
+            'format': environ['response_format']
+        }
+    )
+
+    response = requests.get(*request)
     return response.status_code
+
+
+if __name__ == '__main__':
+    init_environment()
+    print(f'status code: {get_status_code()}')
