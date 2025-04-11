@@ -37,6 +37,8 @@ jobs:
     - name: setup
       run: |
         make setup
+        source venv/bin/activate
+        export PYTHONPATH=$(pwd)
     - name: unit test
       run: |
         make unit-test
