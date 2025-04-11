@@ -37,7 +37,7 @@ jobs:
     - name: Test with pytest
       run: |
         # create test secrets config file
-        echo "[secrets]guardian_api_kety = test" > secret_config.ini
+        echo "[secrets]\nguardian_api_kety = test" > secret_config.ini
         # export pythonpath and run pytest
         export PYTHONPATH=$(pwd)
         pytest test/test.py -vvvrP
