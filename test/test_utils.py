@@ -1,10 +1,12 @@
-from src.utils import init_env_vars
+from src.utils import init_env_vars, format_result
 from os import getenv
 
 import pytest
 
 init_env_vars()
 running_locally = getenv("GITHUB_ACTIONS") == None
+
+#test init_env_vars
 
 def test_init_env_vars_creates_correct_enivronmental_deafault_url():
     expected_default_url = 'https://content.guardianapis.com/search'
@@ -21,3 +23,15 @@ def test_init_env_vars_creates_correct_enivronmental_api_key():
     expected_api_key = 'test'
     test_api_key = getenv('api_key')
     assert test_api_key == expected_api_key
+
+#test format_result
+
+def test_format_result_returns_dict_when_given_correct_input():
+    test_input = {
+    'webPublicationDate': 'test_webPublicationDate',
+    'webTitle': 'test_webTitle',
+    'webUrl': 'test_webUrl'
+    }
+
+    result = format_result(test_input)
+    assert isinstance(result, dict)
