@@ -43,8 +43,17 @@ def get_content(request):
     results = content['response']['results']
 
     for item in results:
-        pprint(item)
+        pprint(format_article(item))
         print('\n')
+
+def format_article(article):
+    formatted_article = {
+    'webPublicationDate': article['webPublicationDate'],
+    'webTitle': article['webTitle'],
+    'webUrl': article['webUrl']
+    }
+
+    return formatted_article
 
 if __name__ == '__main__':
     create_secret_config()
