@@ -27,3 +27,14 @@ def init_env_vars():
     environ['api_key'] = config['secrets']['guardian_api_key']
     environ['response_format'] = config['headers']['response_format']
     environ['deafault_url'] = config['url']['deafault_url']
+
+
+def format_result(result):
+    
+    formatted_result = {
+    'webPublicationDate': result['webPublicationDate'],
+    'webTitle': result['webTitle'],
+    'webUrl': result['webUrl']
+    }
+
+    return formatted_result

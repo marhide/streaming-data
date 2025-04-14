@@ -1,5 +1,5 @@
 from os import environ
-from src.utils import init_env_vars, create_secret_config
+from src.utils import init_env_vars, create_secret_config, format_result
 import requests
 from pprint import pprint
 import json
@@ -42,18 +42,10 @@ def get_content(request):
     content = json.loads(response.text)
     results = content['response']['results']
 
-    for item in results:
-        pprint(format_article(item))
-        print('\n')
+    formatted_results = [format_result(result) for result in results]
 
-def format_article(article):
-    formatted_article = {
-    'webPublicationDate': article['webPublicationDate'],
-    'webTitle': article['webTitle'],
-    'webUrl': article['webUrl']
-    }
+    return formatted_results
 
-    return formatted_article
 
 if __name__ == '__main__':
     create_secret_config()
@@ -65,6 +57,8 @@ if __name__ == '__main__':
     request = create_request(search_term, date_from)
 
     status_code = get_status_code(request)
-    get_content(request)
+    content = get_content(request)
 
-    # print(f'status code: {status_code}')
+    print(f'status code: {status_code}')
+
+    print(f'conent: {content}')
