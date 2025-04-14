@@ -35,3 +35,13 @@ def test_format_result_returns_dict_when_given_correct_input():
 
     result = format_result(test_input)
     assert isinstance(result, dict)
+
+def test_format_result_returns_dict_with_three_kvs_when_given_correct_input():
+    test_input = {
+    'webPublicationDate': 'test_webPublicationDate',
+    'webTitle': 'test_webTitle',
+    'webUrl': 'test_webUrl'
+    }
+
+    result = format_result(test_input)
+    assert len(result) == 3
