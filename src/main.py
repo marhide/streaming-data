@@ -1,6 +1,8 @@
 from os import environ
 from src.utils import init_env_vars, create_secret_config
 import requests
+from pprint import pprint
+import json
 
 def create_request(search_term=None, date_from=None):
 
@@ -32,8 +34,17 @@ def get_status_code(request=None):
         request = create_request()
 
     response = requests.get(*request)
-    return response.status_code
+    status_code = response.status_code
+    return status_code
 
+def get_content(request):
+    response = requests.get(*request)
+    content = json.loads(response.text)
+    results = content['response']['results']
+
+    for item in results:
+        pprint(item)
+        print('\n')
 
 if __name__ == '__main__':
     create_secret_config()
@@ -45,5 +56,6 @@ if __name__ == '__main__':
     request = create_request(search_term, date_from)
 
     status_code = get_status_code(request)
+    get_content(request)
 
-    print(f'status code: {status_code}')
+    # print(f'status code: {status_code}')
