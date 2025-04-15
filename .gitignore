@@ -1,7 +1,13 @@
+#custom
 brief.md
 secrets.txt
 secrets.ini
 secret_config.ini
+
+#terraform
+*.terraform
+*.terraform.lock.hcl
+*.tfstate
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
