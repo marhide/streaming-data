@@ -33,8 +33,8 @@ def test_format_result_returns_dict_when_given_correct_input():
     'webUrl': 'test_webUrl'
     }
 
-    result = format_result(test_input)
-    assert isinstance(result, dict)
+    results = format_result(test_input)
+    assert isinstance(results, dict)
 
 def test_format_result_returns_dict_with_three_kvs_when_given_correct_input():
     test_input = {
@@ -43,5 +43,5 @@ def test_format_result_returns_dict_with_three_kvs_when_given_correct_input():
     'webUrl': 'test_webUrl'
     }
 
-    result = format_result(test_input)
-    assert len(result) == 3
+    results = format_result(test_input)
+    assert len(results) == 3

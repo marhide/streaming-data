@@ -29,6 +29,31 @@ def init_env_vars():
     environ['deafault_url'] = config['url']['deafault_url']
 
 
+def create_request(search_term=None, date_from=None):
+
+    query = ''
+
+    if search_term:
+        search_term = '?q=' + search_term.replace(' ', '%20')
+        query += search_term
+
+    if date_from:
+        date_from = '&from-date=' + date_from
+        query += date_from
+
+    url = environ['deafault_url'] + query
+
+    request = (
+        url,
+        {
+            'api-key': environ['api_key'],
+            'format': environ['response_format']
+        }
+    )
+
+    return request
+
+
 def format_result(result):
     
     formatted_result = {
