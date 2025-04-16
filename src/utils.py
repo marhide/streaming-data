@@ -34,7 +34,7 @@ def create_request(search_term=None, date_from=None):
     query = ''
 
     if search_term:
-        search_term = '?q=' + search_term.replace(' ', '%20')
+        search_term = 'q=' + search_term.replace(' ', '%20')
         query += search_term
 
     if date_from:
