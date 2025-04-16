@@ -9,7 +9,7 @@ running_locally = getenv("GITHUB_ACTIONS") == None
 #test init_env_vars
 
 def test_init_env_vars_creates_correct_enivronmental_deafault_url():
-    expected_default_url = 'https://content.guardianapis.com/search'
+    expected_default_url = 'https://content.guardianapis.com/search?'
     test_default_url = getenv('deafault_url')
     assert test_default_url == expected_default_url
 
@@ -62,7 +62,7 @@ def test_create_request_has_dict_as_second_item():
 
 def test_create_request_has_correct_query_url():
     request = create_request()
-    expected = 'https://content.guardianapis.com/search'
+    expected = 'https://content.guardianapis.com/search?'
     assert request[0] == expected
 
 def test_create_request_has_correct_query_url_when_given_search_term():
@@ -74,7 +74,7 @@ def test_create_request_has_correct_query_url_when_given_search_term():
 def test_create_request_has_correct_query_url_when_given_only_date_from():
     date_from = '2023-01-01'
     request = create_request(date_from=date_from)
-    expected = 'https://content.guardianapis.com/search&from-date=2023-01-01'
+    expected = 'https://content.guardianapis.com/search?&from-date=2023-01-01'
     assert request[0] == expected
 
 def test_create_request_has_correct_query_url_when_given_search_term_and_date_from():
