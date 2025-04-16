@@ -1,13 +1,12 @@
-#custom
+#misc
 brief.md
 secrets.txt
 secrets.ini
 secret_config.ini
 
-*.terraform*
-
 # Local .terraform directories
 **/.terraform/*
+*.terraform*
 
 # .tfstate files
 *.tfstate
