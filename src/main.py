@@ -4,6 +4,7 @@ import requests
 from pprint import pprint
 import json
 import boto3
+from os import getenv
 
 
 def get_status_code(request=None):
@@ -26,6 +27,23 @@ def get_results(request):
     return formatted_results
 
 
+def send_message(queue, message_body, message_attributes=None):
+
+    if not message_attributes:
+        message_attributes = {}
+
+    response = queue.send_message(
+        MessageBody=message_body, MessageAttributes=message_attributes
+    )
+    pprint(response)
+
+
+
+def get_queue(name):
+    sqs = boto3.resource('sqs')
+    queue = sqs.get_queue_by_name(QueueName=name)
+    return queue
+
 if __name__ == '__main__':
     create_secret_config()
     init_env_vars()
@@ -41,7 +59,11 @@ if __name__ == '__main__':
     # print(f'status code: {status_code}')
     # print(f'results: {results}')
 
-    sqs = boto3.resource('sqs')
-    queue = sqs.create_queue(QueueName='test', Attributes={'DelaySeconds': '5'})
+    # sqs = boto3.resource('sqs')
+    # queue = sqs.create_queue(QueueName='test', Attributes={'DelaySeconds': '5'})
 
-    queue.send_message(MessageBody='test_body')
+    # queue.send_message(MessageBody='test_body')
+
+    queue_name = getenv('queue_name')
+    new_queue = get_queue(queue_name)
+    send_message(new_queue, str(results[0]))

@@ -25,9 +25,9 @@ def init_env_vars():
     config.read(config_files_to_read)
 
     environ['api_key'] = config['secrets']['guardian_api_key']
-    environ['response_format'] = config['headers']['response_format']
-    environ['deafault_url'] = config['url']['deafault_url']
-
+    environ['response_format'] = config['config']['response_format']
+    environ['deafault_url'] = config['config']['deafault_url']
+    environ['queue_name'] = config['config']['queue_name']
 
 def create_request(search_term=None, date_from=None):
 
