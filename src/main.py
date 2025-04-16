@@ -1,4 +1,3 @@
-
 from src.utils import init_env_vars, create_secret_config, format_result, create_request
 import requests
 from pprint import pprint
@@ -38,11 +37,11 @@ def send_message(queue, message_body, message_attributes=None):
     pprint(response)
 
 
-
 def get_queue(name):
     sqs = boto3.resource('sqs')
     queue = sqs.get_queue_by_name(QueueName=name)
     return queue
+
 
 if __name__ == '__main__':
     create_secret_config()
@@ -52,18 +51,8 @@ if __name__ == '__main__':
     date_from = '2023-01-01'
 
     request = create_request(search_term, date_from)
-
-    # status_code = get_status_code(request)
     results = get_results(request)
-
-    # print(f'status code: {status_code}')
-    # print(f'results: {results}')
-
-    # sqs = boto3.resource('sqs')
-    # queue = sqs.create_queue(QueueName='test', Attributes={'DelaySeconds': '5'})
-
-    # queue.send_message(MessageBody='test_body')
-
     queue_name = getenv('queue_name')
     new_queue = get_queue(queue_name)
-    send_message(new_queue, str(results[0]))
+    message = {request[0]: results}
+    send_message(new_queue, str(message))
