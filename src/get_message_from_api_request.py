@@ -2,6 +2,7 @@ from os import environ
 import requests
 import json
 
+
 def create_request(search_term=None, date_from=None):
     query = ''
 
@@ -49,6 +50,7 @@ def get_results(request):
 def create_message(request, results):
     sorted_results = sorted(results, key=lambda result: result['webPublicationDate'], reverse=True)
     message = str({request[0]: sorted_results[:10]})
+
     return message
 
 
@@ -57,4 +59,5 @@ def get_message(search_term=None, date_from=None):
     results = get_results(request)
     formatted_results = map(format_result, results)
     message = create_message(request, formatted_results)
+    
     return message
