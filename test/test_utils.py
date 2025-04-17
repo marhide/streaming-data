@@ -1,4 +1,4 @@
-from src.utils import init_env_vars, format_result, create_request
+from src.utils import init_env_vars
 from os import getenv
 
 import pytest
