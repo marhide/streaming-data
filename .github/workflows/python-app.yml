@@ -37,8 +37,7 @@ jobs:
     - name: Test with pytest
       run: |
         # create test secrets config file
-        echo -e "[secrets]\nguardian_api_key = test" >> secret_config.ini
+        echo -e "[secrets]\nguardian_api_key = test_api_key\nqueue_name = test_queue_name" >> secret_config.ini
         # export pythonpath and run pytest
         export PYTHONPATH=$(pwd)
-        python src/setup.py
         pytest -vvvrP

@@ -56,4 +56,4 @@ def setup_env(api_key=None, queue_name=None):
 
 
 if __name__ == '__main__':
-    setup_env('test_api_key', 'test_queue_name')
+    setup_env()
