@@ -50,7 +50,7 @@ def get_results(request):
     return formatted_results
 
 
-def create_message_body(results):
+def sort_message_content(results):
 
     sorted_results = sorted(results, key=lambda result: result['webPublicationDate'], reverse=True)
     message_body = sorted_results[:10]
@@ -59,12 +59,12 @@ def create_message_body(results):
 
 
 def get_message(search_term=None, date_from=None):
-    
+
     request = create_request(search_term, date_from)
     results = get_results(request)
     formatted_results = map(format_result, results)
 
-    message_body = create_message_body(formatted_results)
+    message_body = sort_message_content(formatted_results)
     message = str({request[0]: message_body})
 
     return message
