@@ -52,8 +52,14 @@ black:
 coverage:
 	$(call execute_in_env, $(PIP) install coverage)
 
+pythonpath:
+	$(call export PYTHONPATH=$(pwd))
+
+activate:
+	$(call source venv/bin/activate)
+
 ## Set up dev requirements (bandit, safety, black)
-dev-setup: bandit safety black coverage
+dev-setup: bandit safety black coverage pythonpath activate
 
 setup: create-environment dev-setup
 

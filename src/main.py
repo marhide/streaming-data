@@ -1,5 +1,7 @@
 from src.utils import init_env_vars, create_secret_config, create_secrets_tfvars_file
 from src.get_message_from_api_request import get_message, create_request
+from src.setup import setup_env
+
 
 import requests
 from pprint import pprint
@@ -39,9 +41,7 @@ def get_queue(name):
 
 
 if __name__ == '__main__':
-    create_secret_config()
-    init_env_vars()
-    create_secrets_tfvars_file()
+    setup_env()
 
     search_term = 'machine learning'
     date_from = '2023-01-01'
