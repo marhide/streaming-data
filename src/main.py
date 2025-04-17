@@ -42,6 +42,11 @@ def get_queue(name):
     queue = sqs.get_queue_by_name(QueueName=name)
     return queue
 
+def create_message(request, results):
+    sorted_results = sorted(results, key=lambda result: result['webPublicationDate'], reverse=True)
+    message = str({request[0]: sorted_results})
+    return message
+
 
 if __name__ == '__main__':
     create_secret_config()
@@ -52,7 +57,9 @@ if __name__ == '__main__':
 
     request = create_request(search_term, date_from)
     results = get_results(request)
+    message = create_message(request, results)
+
     queue_name = getenv('queue_name')
     new_queue = get_queue(queue_name)
-    message = {request[0]: results}
-    send_message(new_queue, str(message))
+
+    send_message(new_queue, message)
