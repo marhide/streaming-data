@@ -44,7 +44,7 @@ def get_queue(name):
 
 def create_message(request, results):
     sorted_results = sorted(results, key=lambda result: result['webPublicationDate'], reverse=True)
-    message = str({request[0]: sorted_results})
+    message = str({request[0]: sorted_results[:10]})
     return message
 
 
