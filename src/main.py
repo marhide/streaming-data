@@ -1,4 +1,4 @@
-from src.utils import init_env_vars, create_secret_config
+from src.utils import init_env_vars, create_secret_config, create_secrets_tfvars_file
 from src.get_message_from_api_request import get_message, create_request
 
 import requests
@@ -31,7 +31,7 @@ def send_message_to_queue(queue, message_body, message_attributes=None):
 
 
 def get_queue(name):
-    
+
     sqs = boto3.resource('sqs')
     queue = sqs.get_queue_by_name(QueueName=name)
 
@@ -41,6 +41,7 @@ def get_queue(name):
 if __name__ == '__main__':
     create_secret_config()
     init_env_vars()
+    create_secrets_tfvars_file()
 
     search_term = 'machine learning'
     date_from = '2023-01-01'
