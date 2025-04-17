@@ -9,7 +9,10 @@ def create_secret_config():
     
     if not secret_config_path.exists():
         new_api_key = input('No Guardian API key found!\nPlase enter your Guardian API key:')
-        content = '[secrets]\nguardian_api_key = '+ new_api_key
+        new_secret_queue_name = input('What should the SQS queue be named?')
+
+
+        content = '[secrets]\nguardian_api_key = ' + new_api_key + '\nqueue_name = ' + new_secret_queue_name
 
         with open('secret_config.ini', 'w', encoding='utf-8') as file:
             file.write(content)
