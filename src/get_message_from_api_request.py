@@ -3,7 +3,6 @@ import requests
 import json
 
 def create_request(search_term=None, date_from=None):
-
     query = ''
 
     if search_term:
@@ -28,7 +27,6 @@ def create_request(search_term=None, date_from=None):
 
 
 def format_result(result):
-    
     formatted_result = {
     'webPublicationDate': result['webPublicationDate'],
     'webTitle': result['webTitle'],
