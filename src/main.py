@@ -3,7 +3,6 @@ from src.get_message_from_api_request import get_message, create_request
 
 import requests
 from pprint import pprint
-import json
 import boto3
 from os import getenv
 
