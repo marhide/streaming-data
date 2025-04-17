@@ -14,6 +14,7 @@ def get_status_code(request=None):
 
     response = requests.get(*request)
     status_code = response.status_code
+
     return status_code
 
 
@@ -30,8 +31,10 @@ def send_message_to_queue(queue, message_body, message_attributes=None):
 
 
 def get_queue(name):
+    
     sqs = boto3.resource('sqs')
     queue = sqs.get_queue_by_name(QueueName=name)
+
     return queue
 
 

@@ -4,6 +4,7 @@ import json
 
 
 def create_request(search_term=None, date_from=None):
+
     query = ''
 
     if search_term:
@@ -28,6 +29,7 @@ def create_request(search_term=None, date_from=None):
 
 
 def format_result(result):
+
     formatted_result = {
     'webPublicationDate': result['webPublicationDate'],
     'webTitle': result['webTitle'],
@@ -38,6 +40,7 @@ def format_result(result):
 
 
 def get_results(request):
+
     response = requests.get(*request)
     content = json.loads(response.text)
 
@@ -48,6 +51,7 @@ def get_results(request):
 
 
 def create_message_body(results):
+
     sorted_results = sorted(results, key=lambda result: result['webPublicationDate'], reverse=True)
     message_body = sorted_results[:10]
 
@@ -55,6 +59,7 @@ def create_message_body(results):
 
 
 def get_message(search_term=None, date_from=None):
+    
     request = create_request(search_term, date_from)
     results = get_results(request)
     formatted_results = map(format_result, results)
