@@ -1,4 +1,4 @@
-from src.utils import init_env_vars, create_secret_config, format_result, create_request
+from src.utils import init_env_vars, create_secret_config, format_result, create_request, create_message
 import requests
 from pprint import pprint
 import json
@@ -41,11 +41,6 @@ def get_queue(name):
     sqs = boto3.resource('sqs')
     queue = sqs.get_queue_by_name(QueueName=name)
     return queue
-
-def create_message(request, results):
-    sorted_results = sorted(results, key=lambda result: result['webPublicationDate'], reverse=True)
-    message = str({request[0]: sorted_results[:10]})
-    return message
 
 
 if __name__ == '__main__':

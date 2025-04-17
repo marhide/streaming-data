@@ -29,6 +29,7 @@ def init_env_vars():
     environ['deafault_url'] = config['config']['deafault_url']
     environ['queue_name'] = config['config']['queue_name']
 
+
 def create_request(search_term=None, date_from=None):
 
     query = ''
@@ -63,3 +64,9 @@ def format_result(result):
     }
 
     return formatted_result
+
+
+def create_message(request, results):
+    sorted_results = sorted(results, key=lambda result: result['webPublicationDate'], reverse=True)
+    message = str({request[0]: sorted_results[:10]})
+    return message
