@@ -55,6 +55,6 @@ if __name__ == '__main__':
     message = create_message(request, results)
 
     queue_name = getenv('queue_name')
-    new_queue = get_queue(queue_name)
+    queue = get_queue(queue_name)
 
-    send_message(new_queue, message)
+    send_message(queue, message)
