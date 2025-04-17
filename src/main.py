@@ -1,4 +1,6 @@
-from src.utils import init_env_vars, create_secret_config, format_result, create_request, create_message
+from src.utils import init_env_vars, create_secret_config
+from src.get_message_from_api_request import get_message, create_request
+
 import requests
 from pprint import pprint
 import json
@@ -14,16 +16,6 @@ def get_status_code(request=None):
     response = requests.get(*request)
     status_code = response.status_code
     return status_code
-
-
-def get_results(request):
-    response = requests.get(*request)
-    content = json.loads(response.text)
-
-    results = content['response']['results']
-    formatted_results = [format_result(result) for result in results]
-
-    return formatted_results
 
 
 def send_message(queue, message_body, message_attributes=None):
@@ -50,9 +42,7 @@ if __name__ == '__main__':
     search_term = 'machine learning'
     date_from = '2023-01-01'
 
-    request = create_request(search_term, date_from)
-    results = get_results(request)
-    message = create_message(request, results)
+    message = get_message(search_term, date_from)
 
     queue_name = getenv('queue_name')
     queue = get_queue(queue_name)
