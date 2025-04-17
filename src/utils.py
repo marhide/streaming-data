@@ -1,8 +1,6 @@
 from configparser import ConfigParser
 from pathlib import Path
 from os import environ
-import requests
-import json
 
 
 def create_secret_config():
