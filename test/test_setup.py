@@ -1,4 +1,4 @@
-from src.utils import init_env_vars
+from src.setup import init_env_vars
 from os import getenv
 
 import pytest
@@ -20,6 +20,6 @@ def test_init_env_vars_creates_correct_enivronmental_response_format():
 
 @pytest.mark.skipif(running_locally, reason='test only checks for mock api key in github actions')
 def test_init_env_vars_creates_correct_enivronmental_api_key():
-    expected_api_key = 'test_api_key_for_github'
+    expected_api_key = 'test_api_key'
     test_api_key = getenv('api_key')
     assert test_api_key == expected_api_key

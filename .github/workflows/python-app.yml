@@ -41,6 +41,4 @@ jobs:
         # export pythonpath and run pytest
         export PYTHONPATH=$(pwd)
         python src/setup.py
-        test_api_key_for_github
-        test_queue_name_for_github
         pytest -vvvrP

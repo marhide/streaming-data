@@ -1,4 +1,3 @@
-from src.utils import init_env_vars, create_secret_config, create_secrets_tfvars_file
 from src.get_message_from_api_request import get_message, create_request
 from src.setup import setup_env
 
