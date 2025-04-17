@@ -30,3 +30,4 @@ def init_env_vars():
     environ['response_format'] = config['config']['response_format']
     environ['deafault_url'] = config['config']['deafault_url']
     environ['queue_name'] = config['config']['queue_name']
+    environ['message_id'] = config['config']['message_id']

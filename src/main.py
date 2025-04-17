@@ -25,7 +25,8 @@ def send_message(queue, message_body, message_attributes=None):
     response = queue.send_message(
         MessageBody=message_body, MessageAttributes=message_attributes
     )
-    pprint(response)
+    
+    return response
 
 
 def get_queue(name):
@@ -40,10 +41,11 @@ if __name__ == '__main__':
 
     search_term = 'machine learning'
     date_from = '2023-01-01'
+    message_id = getenv('message_id')
 
     message = get_message(search_term, date_from)
 
     queue_name = getenv('queue_name')
     queue = get_queue(queue_name)
 
-    send_message(queue, message)
+    pprint(send_message(queue, message))
