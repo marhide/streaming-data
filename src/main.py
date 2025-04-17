@@ -17,7 +17,7 @@ def get_status_code(request=None):
     return status_code
 
 
-def send_message(queue, message_body, message_attributes=None):
+def send_message_to_queue(queue, message_body, message_attributes=None):
 
     if not message_attributes:
         message_attributes = {}
@@ -48,4 +48,5 @@ if __name__ == '__main__':
     queue_name = getenv('queue_name')
     queue = get_queue(queue_name)
 
-    pprint(send_message(queue, message))
+    response = send_message_to_queue(queue, message)
+    pprint(response)
