@@ -28,6 +28,16 @@ def create_request(search_term=None, from_date=None):
     return request
 
 
+def get_results(request):
+
+    response = requests.get(*request)
+    content = json.loads(response.text)
+    results = content['response']['results']
+    formatted_results = [format_result(result) for result in results]
+
+    return formatted_results
+
+
 def format_result(result):
 
     formatted_result = {
@@ -39,19 +49,9 @@ def format_result(result):
     return formatted_result
 
 
-def get_results(request):
+def sort_message_content(results, sort_by='webPublicationDate'):
 
-    response = requests.get(*request)
-    content = json.loads(response.text)
-    results = content['response']['results']
-    formatted_results = [format_result(result) for result in results]
-
-    return formatted_results
-
-
-def sort_message_content(results):
-
-    sorted_results = sorted(results, key=lambda result: result['webPublicationDate'], reverse=True)
+    sorted_results = sorted(results, key=lambda result: result[sort_by], reverse=True)
     message_body = sorted_results[:10]
 
     return message_body
