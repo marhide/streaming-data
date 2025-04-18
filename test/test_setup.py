@@ -41,6 +41,6 @@ def test_set_env_vars_creates_correct_enivronmental_api_key():
 
 @pytest.mark.skipif(running_locally, reason='test only checks for mock api key in github actions')
 def test_set_env_vars_creates_correct_env_q_name():
-    expected_queue_name = 'test_queue_name'
+    expected_queue_name = 'test_queue_name.fifo'
     test_queue_name = getenv('queue_name')
     assert test_queue_name == expected_queue_name
