@@ -40,7 +40,6 @@ def send_message_to_queue(queue, message_body, message_attributes={}):
 
 def deactivate():
 
-    # os.remove('secret_config.ini')
     os.remove('./terraform/secrets.auto.tfvars')
 
     environ_list = [
@@ -66,10 +65,8 @@ if __name__ == '__main__':
 
     try:
         setup_env()
-
         search_term = getenv('default_search_term')
         from_date = getenv('default_from_date')
-
 
         message = get_message(search_term, from_date)
 

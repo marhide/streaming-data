@@ -1,5 +1,6 @@
-from src.setup import set_env_vars, set_secret_env_vars
-from os import getenv
+from src.setup import set_env_vars, set_secret_env_vars, create_secrets_tfvars_file
+from os import getenv, path
+from src.main import deactivate
 
 import pytest
 
@@ -34,12 +35,31 @@ def test_set_env_vars_sets_correct_default_from_date():
     test_default_from_date = getenv('default_from_date')
     assert test_default_from_date == expected
 
-def test_set_env_vars_creates_correct_enivronmental_api_key():
+#test set_secret_env_vars
+
+def test_set_secret_env_vars_creates_correct_enivronmental_api_key():
     expected_api_key = 'test'
     test_api_key = getenv('api_key')
     assert test_api_key == expected_api_key
 
-def test_set_env_vars_creates_correct_env_q_name():
+def test_secret_set_env_vars_creates_correct_env_q_name():
     expected_queue_name = 'test_queue_name.fifo'
     test_queue_name = getenv('queue_name')
     assert test_queue_name == expected_queue_name
+
+#test create_secret_tfvars_file
+
+def test_create_tfvars_file_creates_a_file():
+    create_secrets_tfvars_file()
+    assert path.exists('./terraform/secrets.auto.tfvars')
+    deactivate()
+
+def test_create_tfvars_file_has_correct_conent():
+    set_env_vars()
+    set_secret_env_vars('test_999', 'test_queue_name_999')
+    create_secrets_tfvars_file()
+    with open('./terraform/secrets.auto.tfvars', 'r', encoding='utf-8') as test_file_content:
+        assert test_file_content.read() == 'queue_name = "test_queue_name_999.fifo"'
+        deactivate()
+    
+
