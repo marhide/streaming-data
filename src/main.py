@@ -8,17 +8,6 @@ from os import getenv
 import os
 
 
-def get_status_code(request=None):
-
-    if request == None:
-        request = create_request()
-
-    response = requests.get(*request)
-    status_code = response.status_code
-
-    return status_code
-
-
 def get_queue(name):
 
     sqs = boto3.resource('sqs')
@@ -36,6 +25,19 @@ def send_message_to_queue(queue, message_body, message_attributes={}):
     )
     
     return response
+
+
+def input_search_terms():
+    search_term = input('enter search term')
+    from_date = input('enter from date in format yyyy-mm-dd')
+
+    if search_term == '':
+        search_term = getenv('default_search_term')
+
+    if from_date == '':
+        from_date = getenv('default_from_date')
+
+    return (search_term, from_date)
 
 
 def deactivate():
@@ -65,10 +67,9 @@ if __name__ == '__main__':
 
     try:
         setup_env()
-        search_term = getenv('default_search_term')
-        from_date = getenv('default_from_date')
+        search_terms = input_search_terms()
 
-        message = get_message(search_term, from_date)
+        message = get_message(*search_terms)
 
         queue_name = getenv('queue_name')
         queue = get_queue(queue_name)

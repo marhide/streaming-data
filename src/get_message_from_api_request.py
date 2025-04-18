@@ -23,11 +23,16 @@ def create_request(search_term=None, from_date=None):
 def get_results(request):
 
     response = requests.get(*request)
-    content = json.loads(response.text)
-    results = content['response']['results']
-    formatted_results = [format_result(result) for result in results]
+    status_code = response.status_code
 
-    return formatted_results
+    if status_code == 200:
+        content = json.loads(response.text)
+        results = content['response']['results']
+
+        return results
+    
+    else:
+        raise Exception(f'Error: status code {status_code}')
 
 
 def format_result(result):
