@@ -7,6 +7,7 @@ import boto3
 from os import getenv
 import os
 
+
 def get_status_code(request=None):
 
     if request == None:
@@ -18,10 +19,15 @@ def get_status_code(request=None):
     return status_code
 
 
-def send_message_to_queue(queue, message_body, message_attributes=None):
+def get_queue(name):
 
-    if not message_attributes:
-        message_attributes = {}
+    sqs = boto3.resource('sqs')
+    queue = sqs.get_queue_by_name(QueueName=name)
+
+    return queue
+
+
+def send_message_to_queue(queue, message_body, message_attributes={}):
 
     group_id = getenv('message_id')
 
@@ -32,17 +38,9 @@ def send_message_to_queue(queue, message_body, message_attributes=None):
     return response
 
 
-def get_queue(name):
-
-    sqs = boto3.resource('sqs')
-    queue = sqs.get_queue_by_name(QueueName=name)
-
-    return queue
-
-
 def deactivate():
 
-    os.remove('secret_config.ini')
+    # os.remove('secret_config.ini')
     os.remove('./terraform/secrets.auto.tfvars')
 
     environ_list = [

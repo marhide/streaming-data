@@ -3,29 +3,29 @@ from pathlib import Path
 from configparser import ConfigParser
 
 
-def create_secret_config(api_key=None, queue_name=None):
+# def create_secret_config(api_key=None, queue_name=None):
 
-    secret_config_path = Path('secret_config.ini')
+#     secret_config_path = Path('secret_config.ini')
     
-    if not secret_config_path.exists():
+#     if not secret_config_path.exists():
 
-        if api_key is None:
-            api_key = input('Enter your Guardian API key:')
+#         if api_key is None:
+#             api_key = input('Enter your Guardian API key:')
 
-        if queue_name is None:
-            queue_name = input('Choose a name for the SQS queue:')
+#         if queue_name is None:
+#             queue_name = input('Choose a name for the SQS queue:')
 
-        content = '[secrets]\nguardian_api_key = ' + api_key + '\nqueue_name = ' + queue_name
+#         content = '[secrets]\nguardian_api_key = ' + api_key + '\nqueue_name = ' + queue_name
 
-        with open('secret_config.ini', 'w', encoding='utf-8') as file:
-            file.write(content)
+#         with open('secret_config.ini', 'w', encoding='utf-8') as file:
+#             file.write(content)
 
 
 def set_env_vars():
 
     config_files_to_read = [
         'config.ini', 
-        'secret_config.ini'
+        # 'secret_config.ini'
         ]
 
     config = ConfigParser()
@@ -38,8 +38,20 @@ def set_env_vars():
     environ['default_from_date'] = config['config']['default_from_date']
 
     #secret
-    environ['api_key'] = config['secrets']['guardian_api_key']
-    environ['queue_name'] = config['secrets']['queue_name'] + '.fifo'
+    # environ['api_key'] = config['secrets']['guardian_api_key']
+    # environ['queue_name'] = config['secrets']['queue_name'] + '.fifo'
+
+def set_secret_env_vars(api_key=None, queue_name=None):
+
+    if api_key is None:
+        api_key = input('Enter your Guardian API key:')
+
+    if queue_name is None:
+        queue_name = input('Choose a name for the SQS queue:')
+
+    environ['api_key'] = api_key
+    environ['queue_name'] = queue_name + '.fifo'
+
 
 
 def create_secrets_tfvars_file():
@@ -51,8 +63,9 @@ def create_secrets_tfvars_file():
 
 
 def setup_env(api_key=None, queue_name=None):
-    create_secret_config(api_key, queue_name)
+    # create_secret_config(api_key, queue_name)
     set_env_vars()
+    set_secret_env_vars(api_key, queue_name)
     create_secrets_tfvars_file()
 
 

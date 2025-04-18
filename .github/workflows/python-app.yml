@@ -36,8 +36,6 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        # create test secrets config file
-        echo -e "[secrets]\nguardian_api_key = test\nqueue_name = test_queue_name" >> secret_config.ini
         # export pythonpath and run pytest
         export PYTHONPATH=$(pwd)
         pytest -vvvrP

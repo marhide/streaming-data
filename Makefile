@@ -53,10 +53,10 @@ coverage:
 	$(call execute_in_env, $(PIP) install coverage)
 
 pythonpath:
-	$(call export PYTHONPATH=$(pwd))
+	export PYTHONPATH=$(WD)
 
 activate:
-	$(call source venv/bin/activate)
+	source $(VENV)/bin/activate
 
 ## Set up dev requirements (bandit, safety, black)
 dev-setup: bandit safety black coverage pythonpath activate
@@ -74,9 +74,9 @@ run-black:
 
 ## Run the unit tests
 unit-test:
-	echo -e "[secrets]\nguardian_api_key = test\nqueue_name = test_queue_name" >> secret_config.ini
+	# echo -e "[secrets]\nguardian_api_key = test\nqueue_name = test_queue_name" >> secret_config.ini
 	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest -vvvrP)
-	rm secret_config.ini
+	# rm secret_config.ini
 
 ## Run the coverage check
 check-coverage:

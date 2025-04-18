@@ -1,7 +1,8 @@
 from src.main import get_status_code, create_request
-from src.setup import set_env_vars
+from src.setup import set_env_vars, set_secret_env_vars
 
 set_env_vars()
+set_secret_env_vars('test', 'test_queue_name')
 
 #test get_response_code
 
