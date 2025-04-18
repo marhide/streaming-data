@@ -47,15 +47,15 @@ def test_create_request_has_correct_query_url_when_given_search_term():
     expected = 'https://content.guardianapis.com/search?q=machine%20learning'
     assert request[0] == expected
 
-def test_create_request_has_correct_query_url_when_given_only_date_from():
-    date_from = '2023-01-01'
-    request = create_request(date_from=date_from)
+def test_create_request_has_correct_query_url_when_given_only_from_date():
+    from_date = '2023-01-01'
+    request = create_request(from_date=from_date)
     expected = 'https://content.guardianapis.com/search?&from-date=2023-01-01'
     assert request[0] == expected
 
-def test_create_request_has_correct_query_url_when_given_search_term_and_date_from():
+def test_create_request_has_correct_query_url_when_given_search_term_and_from_date():
     search_term = 'machine learning'
-    date_from = '2023-01-01'
-    request = create_request(search_term, date_from)
+    from_date = '2023-01-01'
+    request = create_request(search_term, from_date)
     expected = 'https://content.guardianapis.com/search?q=machine%20learning&from-date=2023-01-01'
     assert request[0] == expected

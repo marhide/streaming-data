@@ -16,7 +16,7 @@ def test_get_status_code_returns_200():
 
 def test_get_status_code_returns_200_when_given_query():
     search_term = 'machine learning'
-    date_from = '2023-01-01'
-    request = create_request(search_term, date_from)
+    from_date = '2023-01-01'
+    request = create_request(search_term, from_date)
     status_code = get_status_code(request)
     assert status_code == 200
