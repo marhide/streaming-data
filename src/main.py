@@ -1,7 +1,7 @@
-from src.get_message_from_api_request import get_message, create_request
+from src.get_message_from_api_request import get_message
 from src.setup import setup_env
+from src.utils import validate_date
 
-import requests
 from pprint import pprint
 import boto3
 from os import getenv
@@ -28,14 +28,13 @@ def send_message_to_queue(queue, message_body, message_attributes={}):
 
 
 def input_search_terms():
-    search_term = input('enter search term')
-    from_date = input('enter from date in format yyyy-mm-dd')
+    search_term = input('enter search term: ')
+    from_date = input('enter from date in format yyyy-mm-dd: ')
+
+    validate_date(from_date)
 
     if search_term == '':
         search_term = getenv('default_search_term')
-
-    if from_date == '':
-        from_date = getenv('default_from_date')
 
     return (search_term, from_date)
 
@@ -67,9 +66,9 @@ if __name__ == '__main__':
 
     try:
         setup_env()
-        search_terms = input_search_terms()
+        # search_terms = input_search_terms()
 
-        message = get_message(*search_terms)
+        message = get_message(*input_search_terms())
 
         queue_name = getenv('queue_name')
         queue = get_queue(queue_name)

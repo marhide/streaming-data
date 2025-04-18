@@ -31,7 +31,7 @@ def test_set_env_vars_sets_correct_default_search_term():
     assert expected_default_search_term == test_default_search_term
 
 def test_set_env_vars_sets_correct_default_from_date():
-    expected = '2023-01-01'
+    expected = '1900-01-01'
     test_default_from_date = getenv('default_from_date')
     assert test_default_from_date == expected
 
