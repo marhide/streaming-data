@@ -5,17 +5,9 @@ import json
 
 def create_request(search_term=None, from_date=None):
 
-    query = ''
-
-    if search_term:
-        search_term = 'q=' + search_term.replace(' ', '%20')
-        query += search_term
-
-    if from_date:
-        from_date = '&from-date=' + from_date
-        query += from_date
-
-    url = environ['default_url'] + query
+    url = environ['default_url']
+    url += 'q=' + search_term.replace(' ', '%20') if search_term else ''
+    url += '&from-date=' + from_date if from_date else ''
 
     request = (
         url,

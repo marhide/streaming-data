@@ -74,7 +74,9 @@ run-black:
 
 ## Run the unit tests
 unit-test:
+	echo -e "[secrets]\nguardian_api_key = test\nqueue_name = test_queue_name" >> secret_config.ini
 	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest -vvvrP)
+	rm secret_config.ini
 
 ## Run the coverage check
 check-coverage:
