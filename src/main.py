@@ -24,8 +24,10 @@ def send_message_to_queue(queue, message_body, message_attributes=None):
     if not message_attributes:
         message_attributes = {}
 
+    group_id = getenv('message_id')
+
     response = queue.send_message(
-        MessageBody=message_body, MessageAttributes=message_attributes
+        MessageBody=message_body, MessageAttributes=message_attributes, MessageGroupId=group_id
     )
     
     return response
@@ -42,11 +44,11 @@ def get_queue(name):
 if __name__ == '__main__':
     setup_env()
 
-    search_term = 'machine learning'
-    date_from = '2023-01-01'
+    search_term = getenv('default_search_term')
+    from_date = getenv('default_from_date')
     message_id = getenv('message_id')
 
-    message = get_message(search_term, date_from)
+    message = get_message(search_term, from_date)
 
     queue_name = getenv('queue_name')
     queue = get_queue(queue_name)

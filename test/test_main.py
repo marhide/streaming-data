@@ -1,7 +1,7 @@
 from src.main import get_status_code, create_request
-from src.setup import init_env_vars
+from src.setup import set_env_vars
 
-init_env_vars()
+set_env_vars()
 
 #test get_response_code
 

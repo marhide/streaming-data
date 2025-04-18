@@ -3,7 +3,7 @@ import requests
 import json
 
 
-def create_request(search_term=None, date_from=None):
+def create_request(search_term=None, from_date=None):
 
     query = ''
 
@@ -11,11 +11,11 @@ def create_request(search_term=None, date_from=None):
         search_term = 'q=' + search_term.replace(' ', '%20')
         query += search_term
 
-    if date_from:
-        date_from = '&from-date=' + date_from
-        query += date_from
+    if from_date:
+        from_date = '&from-date=' + from_date
+        query += from_date
 
-    url = environ['deafault_url'] + query
+    url = environ['default_url'] + query
 
     request = (
         url,
@@ -43,7 +43,6 @@ def get_results(request):
 
     response = requests.get(*request)
     content = json.loads(response.text)
-
     results = content['response']['results']
     formatted_results = [format_result(result) for result in results]
 
@@ -58,9 +57,9 @@ def sort_message_content(results):
     return message_body
 
 
-def get_message(search_term=None, date_from=None):
+def get_message(search_term=None, from_date=None):
 
-    request = create_request(search_term, date_from)
+    request = create_request(search_term, from_date)
     results = get_results(request)
     formatted_results = map(format_result, results)
 

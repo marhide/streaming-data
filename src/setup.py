@@ -10,19 +10,18 @@ def create_secret_config(api_key=None, queue_name=None):
     if not secret_config_path.exists():
 
         if api_key is None:
-            api_key = input('No Guardian API key found!\nPlase enter your Guardian API key:')
+            api_key = input('Enter your Guardian API key:')
 
         if queue_name is None:
-            queue_name = input('What should the SQS queue be named?')
+            queue_name = input('Choose a name for the SQS queue:')
 
         content = '[secrets]\nguardian_api_key = ' + api_key + '\nqueue_name = ' + queue_name
 
         with open('secret_config.ini', 'w', encoding='utf-8') as file:
-            print(content)
             file.write(content)
 
 
-def init_env_vars():
+def set_env_vars():
 
     config_files_to_read = [
         'config.ini', 
@@ -33,12 +32,14 @@ def init_env_vars():
     config.read(config_files_to_read)
 
     environ['response_format'] = config['config']['response_format']
-    environ['deafault_url'] = config['config']['deafault_url']
     environ['message_id'] = config['config']['message_id']
+    environ['default_url'] = config['config']['default_url']
+    environ['default_search_term'] = config['config']['default_search_term']
+    environ['deafualt_from_date'] = config['config']['default_from_date']
 
     #secret
     environ['api_key'] = config['secrets']['guardian_api_key']
-    environ['queue_name'] = config['secrets']['queue_name']
+    environ['queue_name'] = config['secrets']['queue_name'] + '.fifo'
 
 
 def create_secrets_tfvars_file():
@@ -51,7 +52,7 @@ def create_secrets_tfvars_file():
 
 def setup_env(api_key=None, queue_name=None):
     create_secret_config(api_key, queue_name)
-    init_env_vars()
+    set_env_vars()
     create_secrets_tfvars_file()
 
 
