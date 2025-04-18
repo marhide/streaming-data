@@ -35,7 +35,7 @@ def set_env_vars():
     environ['message_id'] = config['config']['message_id']
     environ['default_url'] = config['config']['default_url']
     environ['default_search_term'] = config['config']['default_search_term']
-    environ['deafualt_from_date'] = config['config']['default_from_date']
+    environ['default_from_date'] = config['config']['default_from_date']
 
     #secret
     environ['api_key'] = config['secrets']['guardian_api_key']
