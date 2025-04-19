@@ -7,6 +7,7 @@ import os
 set_env_vars()
 set_secret_env_vars('test', 'test_queue_name')
 
+#this fixes the tests breaking in github actions as it needs the region to be specified whilst running on there
 os.environ['AWS_DEFAULT_REGION'] = 'eu-west-2'
 
 @mock_aws
