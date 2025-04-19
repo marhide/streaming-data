@@ -36,7 +36,7 @@ def input_search_terms():
     if search_term == '':
         search_term = getenv('default_search_term')
 
-    return (search_term, from_date)
+    return {'search_term': search_term, 'from_date': from_date}
 
 
 def deactivate():
@@ -66,9 +66,8 @@ if __name__ == '__main__':
 
     try:
         setup_env()
-        # search_terms = input_search_terms()
 
-        message = get_message(*input_search_terms())
+        message = get_message(**input_search_terms())
 
         queue_name = getenv('queue_name')
         queue = get_queue(queue_name)

@@ -26,6 +26,20 @@ def set_secret_env_vars(api_key=None, queue_name=None):
     environ['queue_name'] = queue_name + '.fifo'
 
 
+class FileWriter(object):
+    def __init__(self, file_name):
+        self.file_name = file_name
+
+    def __enter__(self):
+        self.file = open(self.file_name, "w")
+        return self.file
+
+    def __exit__(self, exception_type, exception_value, traceback):
+        self.file.close()
+
+
+
+
 def create_secrets_tfvars_file():
     filepath = './terraform/secrets.auto.tfvars'
     content = 'queue_name = "' + getenv('queue_name') + '"'
