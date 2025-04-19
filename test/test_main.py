@@ -3,10 +3,11 @@ from src.setup import set_env_vars, set_secret_env_vars
 from moto import mock_aws
 
 import boto3
-
+import os
 set_env_vars()
 set_secret_env_vars('test', 'test_queue_name')
 
+os.environ['AWS_DEFAULT_REGION'] = 'eu-west-2'
 
 @mock_aws
 def test_get_queue_returns_queue_object():
