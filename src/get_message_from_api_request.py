@@ -46,9 +46,15 @@ def format_result(result):
     return formatted_result
 
 
-def sort_message_content(results, sort_by='webPublicationDate'):
+def sort_message_content(results, sort_by='webPublicationDate', sort_order='desc'):
 
-    sorted_results = sorted(results, key=lambda result: result[sort_by], reverse=True)
+    if sort_order == 'asc':
+        sort_order = False
+    
+    if sort_order == 'desc':
+        sort_order = True
+
+    sorted_results = sorted(results, key=lambda result: result[sort_by], reverse=sort_order)
     message_body = sorted_results[:10]
 
     return message_body
@@ -60,7 +66,7 @@ def get_message(search_term=None, from_date=None):
     results = get_results(request)
     formatted_results = map(format_result, results)
 
-    message_body = sort_message_content(formatted_results)
+    message_body = sort_message_content(formatted_results, sort_by='webPublicationDate', sort_order='desc')
     message = str({request[0]: message_body})
 
     return message
