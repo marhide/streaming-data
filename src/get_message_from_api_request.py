@@ -60,13 +60,13 @@ def sort_message_content(results, sort_by='webPublicationDate', sort_order='desc
     return message_body
 
 
-def get_message(search_term=None, from_date=None):
+def get_message(search_term=None, from_date=None, sort_by='webPublicationDate', sort_order='desc'):
 
     request = create_request(search_term, from_date)
     results = get_results(request)
     formatted_results = map(format_result, results)
 
-    message_body = sort_message_content(formatted_results, sort_by='webPublicationDate', sort_order='desc')
+    message_body = sort_message_content(formatted_results, sort_by=sort_by, sort_order=sort_order)
     message = str({request[0]: message_body})
 
     return message
