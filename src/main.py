@@ -50,7 +50,9 @@ def deactivate():
         'message_id',
         'default_url',
         'default_search_term',
-        'default_from_date'
+        'default_from_date',
+        'default_sort_by',
+        'default_sort_order'
         ]
 
     for item in environ_list:

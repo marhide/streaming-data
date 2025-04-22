@@ -12,6 +12,8 @@ def set_env_vars():
     environ['default_url'] = config['config']['default_url']
     environ['default_search_term'] = config['config']['default_search_term']
     environ['default_from_date'] = config['config']['default_from_date']
+    environ['default_sort_by'] = config['config']['default_sort_by']
+    environ['default_sort_order'] = config['config']['default_sort_order']
 
 
 def set_secret_env_vars(api_key=None, queue_name=None):
