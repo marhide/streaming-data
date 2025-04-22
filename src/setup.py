@@ -1,4 +1,5 @@
 from os import getenv, environ
+import os
 from configparser import ConfigParser
 
 
@@ -28,18 +29,6 @@ def set_secret_env_vars(api_key=None, queue_name=None):
     environ['queue_name'] = queue_name + '.fifo'
 
 
-# class FileWriter(object):
-#     def __init__(self, file_name):
-#         self.file_name = file_name
-
-#     def __enter__(self):
-#         self.file = open(self.file_name, "w")
-#         return self.file
-
-#     def __exit__(self, exception_type, exception_value, traceback):
-#         self.file.close()
-
-
 def create_secrets_tfvars_file():
     filepath = './terraform/secrets.auto.tfvars'
     content = 'queue_name = "' + getenv('queue_name') + '"'
@@ -48,11 +37,41 @@ def create_secrets_tfvars_file():
         file.write(content)
 
 
-def setup_env(api_key=None, queue_name=None):
-    set_env_vars()
-    set_secret_env_vars(api_key, queue_name)
-    create_secrets_tfvars_file()
+def deactivate():
+
+    os.remove('./terraform/secrets.auto.tfvars')
+
+    environ_list = [
+        'api_key',
+        'queue_name',
+        'response_format',
+        'message_id',
+        'default_url',
+        'default_search_term',
+        'default_from_date',
+        'default_sort_by',
+        'default_sort_order'
+        ]
+
+    for item in environ_list:
+
+        try:
+            os.environ.pop(item)
+
+        except:
+            raise Exception(f'{item} has not been set as an environ')
 
 
-if __name__ == '__main__':
-    setup_env()
+class SetupEnv():
+    def __init__(self, api_key, queue_name):
+        self.api_key = api_key
+        self.queue_name = queue_name
+
+    def __enter__(self):
+        set_env_vars()
+        set_secret_env_vars(self.api_key, self.queue_name)
+        create_secrets_tfvars_file()
+        return self
+
+    def __exit__(self, exception_type, exception_value, traceback):
+        deactivate()

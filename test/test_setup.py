@@ -1,6 +1,6 @@
 from src.setup import set_env_vars, set_secret_env_vars, create_secrets_tfvars_file
 from os import getenv, path
-from src.main import deactivate
+from src.setup import deactivate
 
 import pytest
 
