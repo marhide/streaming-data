@@ -63,7 +63,7 @@ def sort_message_content(results, sort_by=None, sort_order=None):
     if sort_order not in ['asc', 'desc']:
         sort_order = getenv('default_sort_order')
 
-    __reverse = False if sort_order == 'asc' else True
+    __reverse = sort_order != 'asc'
 
     sorted_results = sorted(results, key=lambda result: result[sort_by], reverse=__reverse)
     message_body = sorted_results[:10]

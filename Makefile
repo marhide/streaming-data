@@ -8,6 +8,14 @@ PROFILE = default
 PIP:=pip
 VENV = venv
 PYTHON = $(VENV)/bin/python3
+QUEUE_NAME = my_new_queue_from_makefile_2
+
+CHDIR_SHELL := $(SHELL)
+define chdir
+   $(eval _D=$(firstword $(1) $(@D)))
+   $(info $(MAKE): cd $(_D)) $(eval SHELL = cd $(_D); $(CHDIR_SHELL))
+endef
+
 
 ## Create python interpreter environment.
 create-environment:
@@ -76,3 +84,23 @@ check-coverage:
 
 ## Run all checks
 run-checks: security-test run-black unit-test check-coverage
+
+## create secrete tfvars file
+tfvars:
+	python -c 'from src.setup import create_secrets_tfvars_file; create_secrets_tfvars_file(queue_name="$(QUEUE_NAME)"+".fifo")'
+
+## terraform init and apply new infrastructure
+terraform-apply:
+	$(call chdir,terraform)
+	terraform init
+	terraform apply -auto-approve
+
+## delete secret tfvars file
+delete_tfvars:
+	python -c 'import os; os.remove("terraform/secrets.auto.tfvars")'
+
+## create a new sqs queue
+new_sqs_queue: 
+	make tfvars 
+	make terraform-apply 
+	make delete_tfvars
