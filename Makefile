@@ -8,7 +8,8 @@ PROFILE = default
 PIP:=pip
 VENV = venv
 PYTHON = $(VENV)/bin/python3
-QUEUE_NAME = my_new_queue_from_makefile_2
+##export myQueueName=[queuename]
+QUEUE_NAME = ${myQueueName}
 
 CHDIR_SHELL := $(SHELL)
 define chdir
@@ -96,11 +97,11 @@ terraform-apply:
 	terraform apply -auto-approve
 
 ## delete secret tfvars file
-delete_tfvars:
+delete-tfvars:
 	python -c 'import os; os.remove("terraform/secrets.auto.tfvars")'
 
 ## create a new sqs queue
-new_sqs_queue: 
+new-sqs-queue: 
 	make tfvars 
 	make terraform-apply 
-	make delete_tfvars
+	make delete-tfvars
