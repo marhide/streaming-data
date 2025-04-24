@@ -64,7 +64,9 @@ coverage:
 ## Set up dev requirements (bandit, safety, black)
 dev-setup: bandit safety black coverage
 
-setup: create-environment dev-setup
+
+setup: create-environment dev-setup 
+
 
 ## Run the security test (bandit + safety)
 security-test:
@@ -102,6 +104,11 @@ delete-tfvars:
 
 ## create a new sqs queue
 new-sqs-queue: 
-	make tfvars 
-	make terraform-apply 
+	make tfvars
+	make terraform-apply
 	make delete-tfvars
+
+## runs the application
+run-app:
+	export PYTHONPATH=$(WD)
+	python src/main.py
