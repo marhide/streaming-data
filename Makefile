@@ -43,6 +43,9 @@ endef
 requirements: create-environment
 	$(call execute_in_env, $(PIP) install -r ./requirements.txt)
 
+test-requirements: create-environment
+	$(call execute_in_env, $(PIP) install -r ./test_requirements.txt)
+
 # Set Up
 
 ## Install bandit
