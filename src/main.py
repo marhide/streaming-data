@@ -51,7 +51,7 @@ def input_from_date():
         counter += 1
 
         if from_date == "":
-            return from_date
+            return None
 
         try:
             validate_date(from_date)

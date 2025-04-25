@@ -4,7 +4,7 @@ from unittest import mock
 import boto3
 from moto import mock_aws
 
-from src.main import get_queue, send_message_to_queue, input_from_date
+from src.main import get_queue, send_message_to_queue, input_search_term, input_from_date
 from src.setup import set_env_vars, set_secret_env_vars
 
 
@@ -41,6 +41,26 @@ def test_send_message_to_queue_returns_status_code_200_when_given_a_queue_obj_an
     assert response["ResponseMetadata"]["HTTPStatusCode"] == 200
 
 
+class TestInputSearchTerm():
+    @mock.patch('src.main.input', create=True)
+    def test_input_search_term_returns_correct_search_term_that_is_input(self, mocked_input):
+        mocked_input.side_effect = ['test search']
+        result = input_search_term()
+        assert result == 'test search'
+
+    @mock.patch('src.main.input', create=True)
+    def test_input_search_term_returns_correct_search_term_that_is_input_but_without_space_at_end(self, mocked_input):
+        mocked_input.side_effect = ['test search with space at the end ']
+        result = input_search_term()
+        assert result == 'test search with space at the end'
+
+    @mock.patch('src.main.input', create=True)
+    def test_input_search_term_returns_correct_search_term_that_is_input_but_without_space_at_end(self, mocked_input):
+        mocked_input.side_effect = ['']
+        result = input_search_term()
+        assert result == 'machine learning'
+
+
 class TestInputFromDate():
     @mock.patch('src.main.input', create=True)
     def test_input_from_date_returns_correct_date_when_input_correct_date(self, mocked_input):
@@ -49,10 +69,10 @@ class TestInputFromDate():
         assert result == '2000-01-01'
 
     @mock.patch('src.main.input', create=True)
-    def test_input_from_date_returns_empty_str_when_given_empty_str(self, mocked_input):
+    def test_input_from_date_returns_none_when_given_empty_str(self, mocked_input):
         mocked_input.side_effect = ['']
         result = input_from_date()
-        assert result == ''
+        assert result is None
 
     @mock.patch('src.main.input', create=True)
     def test_input_from_date_returns_correct_date_when_given_incorrect_date_then_correct_date(self, mocked_input):
