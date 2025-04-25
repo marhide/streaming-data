@@ -28,23 +28,41 @@ def send_message_to_queue(queue, message_body, message_attributes={}):
     return response
 
 
-def input_search_terms():
+def input_search_term():
     search_term = input("enter search term: ")
-    from_date = input("enter from date in format yyyy-mm-dd: ")
-
-    validate_date(from_date)
 
     if search_term == "":
         search_term = getenv("default_search_term")
 
-    return {"search_term": search_term, "from_date": from_date}
+    return search_term
+
+
+def input_from_date():
+    counter = 0
+    while True:
+        from_date = input("enter from date in format yyyy-mm-dd: ").strip()
+
+        counter += 1
+
+        if from_date == "":
+            return from_date
+
+        try:
+            validate_date(from_date)
+            return from_date
+
+        except:
+            print("incorrect date format")
+            if counter >= 3:
+                print("hint: leave blank for no from date limit in search results")
 
 
 if __name__ == "__main__":
-
     with SetupEnv(api_key=None, queue_name=None):
         try:
-            message = get_message(**input_search_terms())
+            search_term = input_search_term()
+            from_date = input_from_date()
+            message = get_message(search_term, from_date)
 
             queue_name = getenv("queue_name")
             queue = get_queue(queue_name)

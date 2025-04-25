@@ -1,9 +1,12 @@
-from src.main import get_queue, send_message_to_queue
-from src.setup import set_env_vars, set_secret_env_vars
-from moto import mock_aws
+import os
+from unittest import mock
 
 import boto3
-import os
+from moto import mock_aws
+
+from src.main import get_queue, send_message_to_queue, input_from_date
+from src.setup import set_env_vars, set_secret_env_vars
+
 
 set_env_vars()
 set_secret_env_vars("test", "test_queue_name")
@@ -23,7 +26,6 @@ def test_get_queue_returns_queue_object():
         test_queue.url == "https://sqs.eu-west-2.amazonaws.com/123456789012/mock_queue"
     )
 
-
 @mock_aws
 def test_send_message_to_queue_returns_status_code_200_when_given_a_queue_obj_and_correct_message():
     test_queue_name = "mock_queue.fifo"
@@ -37,3 +39,29 @@ def test_send_message_to_queue_returns_status_code_200_when_given_a_queue_obj_an
 
     response = send_message_to_queue(test_queue, str(test_message))
     assert response["ResponseMetadata"]["HTTPStatusCode"] == 200
+
+
+class TestInputFromDate():
+    @mock.patch('src.main.input', create=True)
+    def test_input_from_date_returns_correct_date_when_input_correct_date(self, mocked_input):
+        mocked_input.side_effect = ['2000-01-01']
+        result = input_from_date()
+        assert result == '2000-01-01'
+
+    @mock.patch('src.main.input', create=True)
+    def test_input_from_date_returns_empty_str_when_given_empty_str(self, mocked_input):
+        mocked_input.side_effect = ['']
+        result = input_from_date()
+        assert result == ''
+
+    @mock.patch('src.main.input', create=True)
+    def test_input_from_date_returns_correct_date_when_given_incorrect_date_then_correct_date(self, mocked_input):
+        mocked_input.side_effect = ['not a date', '1999-01-01']
+        result = input_from_date()
+        assert result == '1999-01-01'
+
+    @mock.patch('src.main.input', create=True)
+    def test_input_from_date_returns_correct_date_when_given_many_incorrect_date_then_correct_date(self, mocked_input):
+        mocked_input.side_effect = ['not a date' for _ in range(99)] + ['1999-01-01']
+        result = input_from_date()
+        assert result == '1999-01-01'

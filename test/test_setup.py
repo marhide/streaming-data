@@ -1,15 +1,14 @@
-from src.setup import set_env_vars, set_secret_env_vars, create_secrets_tfvars_file
 from os import getenv, path
-from src.setup import deactivate
 
-import pytest
+from src.setup import deactivate
+from src.setup import set_env_vars, set_secret_env_vars, create_secrets_tfvars_file
+
 
 set_env_vars()
 set_secret_env_vars("test", "test_queue_name")
 running_locally = getenv("GITHUB_ACTIONS") == None
 
 # test set_env_vars
-
 
 def test_set_env_vars_creates_correct_enivronmental_response_format():
     expected_response_format = "json"

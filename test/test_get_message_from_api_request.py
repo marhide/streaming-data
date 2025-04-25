@@ -1,3 +1,5 @@
+import pytest
+
 from src.get_message_from_api_request import (
     format_result,
     get_results,
@@ -6,7 +8,6 @@ from src.get_message_from_api_request import (
 )
 from src.setup import set_env_vars, set_secret_env_vars
 
-import pytest
 
 
 # test create_request

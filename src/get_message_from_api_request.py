@@ -1,6 +1,6 @@
-from os import getenv
 import requests
 import json
+from os import getenv
 
 
 def create_request(search_term=None, from_date=None):
@@ -61,10 +61,8 @@ def sort_message_content(results, sort_by=None, sort_order=None):
     if sort_order not in ["asc", "desc"]:
         sort_order = getenv("default_sort_order")
 
-    __reverse = sort_order != "asc"
-
     sorted_results = sorted(
-        results, key=lambda result: result[sort_by], reverse=__reverse
+        results, key=lambda result: result[sort_by], reverse=sort_order != "asc"
     )
     message_body = sorted_results[:10]
 
