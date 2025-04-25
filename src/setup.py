@@ -6,10 +6,10 @@ def set_env_vars():
     config = ConfigParser()
     config.read("config.ini")
 
-    global environ_config_list
-    environ_config_list = [item for item in config["config"]]
+    global environ_list
+    environ_list = [item for item in config["config"]]
 
-    for item in environ_config_list:
+    for item in environ_list:
         os.environ[item] = config['config'][item]
 
 
@@ -20,8 +20,8 @@ def set_secret_env_vars(api_key=None, queue_name=None):
     if queue_name is None:
         queue_name = input("Choose a name for the SQS queue:")
 
-    environ_config_list.append('api_key')
-    environ_config_list.append('queue_name')
+    environ_list.append('api_key')
+    environ_list.append('queue_name')
 
     os.environ["api_key"] = api_key
     os.environ["queue_name"] = queue_name + ".fifo"
@@ -41,7 +41,7 @@ def create_secrets_tfvars_file(queue_name=None):
 def deactivate():
     os.remove("./terraform/secrets.auto.tfvars")
 
-    for item in environ_config_list:
+    for item in environ_list:
 
         try:
             os.environ.pop(item)
