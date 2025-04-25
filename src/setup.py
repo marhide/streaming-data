@@ -3,21 +3,17 @@ from configparser import ConfigParser
 
 
 def set_env_vars():
-
     config = ConfigParser()
     config.read("config.ini")
 
-    os.environ["response_format"] = config["config"]["response_format"]
-    os.environ["message_id"] = config["config"]["message_id"]
-    os.environ["default_url"] = config["config"]["default_url"]
-    os.environ["default_search_term"] = config["config"]["default_search_term"]
-    os.environ["default_from_date"] = config["config"]["default_from_date"]
-    os.environ["default_sort_by"] = config["config"]["default_sort_by"]
-    os.environ["default_sort_order"] = config["config"]["default_sort_order"]
+    global environ_config_list
+    environ_config_list = [item for item in config["config"]]
+
+    for item in environ_config_list:
+        os.environ[item] = config['config'][item]
 
 
 def set_secret_env_vars(api_key=None, queue_name=None):
-
     if api_key is None:
         api_key = input("Enter your Guardian API key:")
 
@@ -29,7 +25,6 @@ def set_secret_env_vars(api_key=None, queue_name=None):
 
 
 def create_secrets_tfvars_file(queue_name=None):
-
     if queue_name is None:
         queue_name = os.getenv("queue_name")
 
@@ -41,22 +36,9 @@ def create_secrets_tfvars_file(queue_name=None):
 
 
 def deactivate():
-
     os.remove("./terraform/secrets.auto.tfvars")
 
-    environ_list = [
-        "api_key",
-        "queue_name",
-        "response_format",
-        "message_id",
-        "default_url",
-        "default_search_term",
-        "default_from_date",
-        "default_sort_by",
-        "default_sort_order",
-    ]
-
-    for item in environ_list:
+    for item in environ_config_list:
 
         try:
             os.environ.pop(item)

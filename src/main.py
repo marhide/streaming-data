@@ -1,10 +1,16 @@
-from src.get_message_from_api_request import get_message
-from src.setup import SetupEnv
-from src.utils import validate_date
-
 from pprint import pprint
-import boto3
 from os import getenv
+
+import boto3
+
+try:
+    from src.get_message_from_api_request import get_message
+    from src.setup import SetupEnv
+    from src.utils import validate_date
+except:
+    from get_message_from_api_request import get_message
+    from setup import SetupEnv
+    from utils import validate_date
 
 
 def get_queue(name):
@@ -29,7 +35,7 @@ def send_message_to_queue(queue, message_body, message_attributes={}):
 
 
 def input_search_term():
-    search_term = input("enter search term: ")
+    search_term = input("enter search term: ").strip()
 
     if search_term == "":
         search_term = getenv("default_search_term")
