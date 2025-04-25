@@ -20,6 +20,9 @@ def set_secret_env_vars(api_key=None, queue_name=None):
     if queue_name is None:
         queue_name = input("Choose a name for the SQS queue:")
 
+    environ_config_list.append('api_key')
+    environ_config_list.append('queue_name')
+
     os.environ["api_key"] = api_key
     os.environ["queue_name"] = queue_name + ".fifo"
 
