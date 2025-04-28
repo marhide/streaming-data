@@ -124,7 +124,7 @@ def sort_message_return_list_with_10_items_when_given_list_with_more_than_10_ite
     assert len(result) == 10
 
 
-def sort_message_content_returns_list_in_correct_order():
+def sort_message_content_returns_list_in_reverse_order_by_default():
     test_list = [{"k": "bbb"}, {"k": "aaa"}, {"k": "ccc"}]
     expected_list = [{"k": "ccc"}, {"k": "bbb"}, {"k": "aaa"}]
 

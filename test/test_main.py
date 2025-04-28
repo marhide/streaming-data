@@ -28,11 +28,12 @@ def test_get_queue_returns_queue_object():
 
 @mock_aws
 def test_send_message_to_queue_returns_status_code_200_when_given_a_queue_obj_and_correct_message():
-    test_queue_name = "mock_queue.fifo"
     mock_sqs = boto3.resource("sqs")
+    test_queue_name = "mock_queue.fifo"
+    test_sqs_attributes = {"FifoQueue": "True", "ContentBasedDeduplication": "True"}
     mock_sqs.create_queue(
         QueueName=test_queue_name,
-        Attributes={"FifoQueue": "True", "ContentBasedDeduplication": "True"},
+        Attributes=test_sqs_attributes,
     )
     test_queue = get_queue(test_queue_name)
     test_message = str({"header": "body"})

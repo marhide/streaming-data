@@ -7,7 +7,7 @@ try:
     from src.get_message_from_api_request import get_message
     from src.setup import SetupEnv
     from src.utils import validate_date
-except:
+except ImportError:
     from get_message_from_api_request import get_message
     from setup import SetupEnv
     from utils import validate_date
@@ -46,17 +46,13 @@ def input_search_term():
 def input_from_date():
     counter = 0
     while True:
-        from_date = input("enter from date in format yyyy-mm-dd: ").strip()
-
         counter += 1
-
+        from_date = input("enter from date in format yyyy-mm-dd: ").strip()
         if from_date == "":
             return None
-
         try:
             validate_date(from_date)
             return from_date
-
         except:
             print("incorrect date format")
             if counter >= 3:
