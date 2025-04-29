@@ -14,14 +14,10 @@ def set_env_vars():
 
 def set_secret_env_vars(api_key=None, queue_name=None):
     if api_key is None:
-        api_key = input("Enter your Guardian API key:")
+        api_key = input("enter your Guardian API key: ")
 
     if queue_name is None:
-        queue_name = input("Choose a name for the SQS queue:")
-
-    # global environ_list
-    # environ_list.append('api_key') 
-    # environ_list.append('queue_name')
+        queue_name = input("enter the SQS queue name: ")
 
     os.environ["api_key"] = api_key
     os.environ["queue_name"] = queue_name + ".fifo"
@@ -45,7 +41,7 @@ def deactivate():
         os.remove(tfvars_secrets_path)
 
     for item in os.environ:
-        if item != 'PYTEST_CURRENT_TEST':
+        if item not in ['PYTEST_CURRENT_TEST', 'AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY']:
             try:
                 os.environ.pop(item)
             except:

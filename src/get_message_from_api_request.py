@@ -6,7 +6,6 @@ from os import getenv
 def create_request(search_term=None, from_date=None):
 
     url = getenv("default_url")
-    # url = ''
     url += "q=" + search_term.replace(" ", "%20") if search_term else ""
     url += "&from-date=" + from_date if from_date else ""
 

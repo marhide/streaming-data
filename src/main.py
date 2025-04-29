@@ -13,27 +13,6 @@ except ImportError:
     from utils import validate_date
 
 
-def get_queue(name):
-
-    sqs = boto3.resource("sqs")
-    queue = sqs.get_queue_by_name(QueueName=name)
-
-    return queue
-
-
-def send_message_to_queue(queue, message_body, message_attributes={}):
-
-    group_id = getenv("message_id")
-
-    response = queue.send_message(
-        MessageBody=message_body,
-        MessageAttributes=message_attributes,
-        MessageGroupId=group_id,
-    )
-
-    return response
-
-
 def input_search_term():
     search_term = input("enter search term: ").strip()
 
@@ -59,6 +38,27 @@ def input_from_date():
                 print("hint: leave blank for no from date limit in search results")
 
 
+def get_queue(name):
+
+    sqs = boto3.resource("sqs")
+    queue = sqs.get_queue_by_name(QueueName=name)
+
+    return queue
+
+
+def send_message_to_queue(queue, message_body, message_attributes={}):
+
+    group_id = getenv("message_id")
+
+    response = queue.send_message(
+        MessageBody=message_body,
+        MessageAttributes=message_attributes,
+        MessageGroupId=group_id,
+    )
+
+    return response
+
+
 def run_app(api_key=None, queue_name=None):
     with SetupEnv(api_key=api_key, queue_name=queue_name):
         try:
@@ -70,11 +70,11 @@ def run_app(api_key=None, queue_name=None):
             queue = get_queue(queue_name)
 
             response = send_message_to_queue(queue, message)
-            pprint(response)
+            return response
 
         except:
             raise Exception("Something has gone wrong.")
 
 
 if __name__ == "__main__":
-    run_app()
+    pprint(run_app())
