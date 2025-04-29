@@ -39,7 +39,10 @@ def create_secrets_tfvars_file(queue_name=None):
 
 
 def deactivate():
-    os.remove("./terraform/secrets.auto.tfvars")
+    tfvars_secrets_path = "./terraform/secrets.auto.tfvars"
+
+    if os.path.exists(tfvars_secrets_path):
+        os.remove(tfvars_secrets_path)
 
     for item in environ_list:
 

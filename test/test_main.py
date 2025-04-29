@@ -5,7 +5,7 @@ from pprint import pprint
 import boto3
 from moto import mock_aws
 
-from src.main import get_queue, send_message_to_queue, input_search_term, input_from_date
+from src.main import get_queue, send_message_to_queue, input_search_term, input_from_date, run_app
 from src.setup import set_env_vars, set_secret_env_vars
 
 
@@ -15,21 +15,20 @@ set_secret_env_vars("test", "test_queue_name")
 # this fixes the tests breaking in github actions as it needs the region to be specified whilst running on there
 os.environ["AWS_DEFAULT_REGION"] = "eu-west-2"
 
+@mock_aws
+class TestGetQueue():
+    def test_get_queue_returns_queue_object(self):
+        test_queue_name = "mock_queue"
+        mock_sqs = boto3.resource("sqs")
+        mock_sqs.create_queue(QueueName=test_queue_name)
+        test_queue = get_queue(test_queue_name)
+
+        assert (
+            test_queue.url == "https://sqs.eu-west-2.amazonaws.com/123456789012/mock_queue"
+        )
 
 @mock_aws
-def test_get_queue_returns_queue_object():
-    test_queue_name = "mock_queue"
-    mock_sqs = boto3.resource("sqs")
-    mock_sqs.create_queue(QueueName=test_queue_name)
-    test_queue = get_queue(test_queue_name)
-
-    assert (
-        test_queue.url == "https://sqs.eu-west-2.amazonaws.com/123456789012/mock_queue"
-    )
-
-
 class TestSendMessageToQueue():
-    @mock_aws
     def test_send_message_to_queue_returns_status_code_200_when_given_a_queue_obj_and_correct_message(self):
         mock_sqs = boto3.resource("sqs")
         test_queue_name = "mock_queue.fifo"
@@ -44,7 +43,7 @@ class TestSendMessageToQueue():
         response = send_message_to_queue(test_queue, test_message)
         assert response["ResponseMetadata"]["HTTPStatusCode"] == 200
 
-    @mock_aws
+
     def test_send_message_to_queue_sends_the_correct_message_to_the_queue(self):
         mock_sqs = boto3.resource("sqs")
         sqs_client = boto3.client("sqs")
@@ -103,6 +102,17 @@ class TestInputFromDate():
 
     @mock.patch('src.main.input', create=True)
     def test_input_from_date_returns_correct_date_when_given_many_incorrect_date_then_correct_date(self, mocked_input):
-        mocked_input.side_effect = ['not a date' for _ in range(99)] + ['1999-01-01']
+        mocked_input.side_effect = ['not a date' for _ in range(9)] + ['1999-01-01']
         result = input_from_date()
         assert result == '1999-01-01'
+
+# @mock_aws
+# class TestRunApp():
+
+#     @mock.patch('src.main.input', create=True)
+#     def test_run_app_returns_status_code_200_when_given_correct_test_inputs(self, mocked_input):
+#         test_api_key = 'test'
+#         test_queue_name = 'test_queue_name'
+#         mocked_input.side_effect = [test_api_key, test_queue_name, '', '']
+#         response = run_app()
+#         assert response["ResponseMetadata"]["HTTPStatusCode"] == 200

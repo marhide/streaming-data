@@ -59,8 +59,8 @@ def input_from_date():
                 print("hint: leave blank for no from date limit in search results")
 
 
-if __name__ == "__main__":
-    with SetupEnv(api_key=None, queue_name=None):
+def run_app(api_key=None, queue_name=None):
+    with SetupEnv(api_key=api_key, queue_name=queue_name):
         try:
             search_term = input_search_term()
             from_date = input_from_date()
@@ -74,3 +74,7 @@ if __name__ == "__main__":
 
         except:
             raise Exception("Something has gone wrong.")
+
+
+if __name__ == "__main__":
+    run_app()
