@@ -6,7 +6,6 @@ def set_env_vars():
     config = ConfigParser()
     config.read("config.ini")
 
-    global environ_list
     environ_list = [item for item in config["config"]]
 
     for item in environ_list:
@@ -20,8 +19,9 @@ def set_secret_env_vars(api_key=None, queue_name=None):
     if queue_name is None:
         queue_name = input("Choose a name for the SQS queue:")
 
-    environ_list.append('api_key')
-    environ_list.append('queue_name')
+    # global environ_list
+    # environ_list.append('api_key') 
+    # environ_list.append('queue_name')
 
     os.environ["api_key"] = api_key
     os.environ["queue_name"] = queue_name + ".fifo"
@@ -44,16 +44,17 @@ def deactivate():
     if os.path.exists(tfvars_secrets_path):
         os.remove(tfvars_secrets_path)
 
-    for item in environ_list:
+    for item in os.environ:
+        if item != 'PYTEST_CURRENT_TEST':
+            try:
+                os.environ.pop(item)
+            except:
+                raise Exception(f"{item} has not been set as an os.environ")
+            
+    print('deactivation successful')
 
-        try:
-            os.environ.pop(item)
 
-        except:
-            raise Exception(f"{item} has not been set as an os.environ")
-
-
-class SetupEnv:
+class SetupEnv():
     def __init__(self, api_key, queue_name):
         self.api_key = api_key
         self.queue_name = queue_name
@@ -61,7 +62,6 @@ class SetupEnv:
     def __enter__(self):
         set_env_vars()
         set_secret_env_vars(self.api_key, self.queue_name)
-        create_secrets_tfvars_file()
         return self
 
     def __exit__(self, exception_type, exception_value, traceback):

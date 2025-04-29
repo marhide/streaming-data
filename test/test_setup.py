@@ -2,22 +2,26 @@ import os
 
 import pytest
 
-from src.setup import set_env_vars, set_secret_env_vars, create_secrets_tfvars_file, SetupEnv
+from src.setup import set_env_vars, set_secret_env_vars, create_secrets_tfvars_file, deactivate, SetupEnv
 
 global test_api_key, test_queue_name
 test_api_key, test_queue_name  = 'test', 'test_queue_name'
 
-@pytest.fixture(scope='class', autouse=False)
+@pytest.fixture(scope='function', autouse=False)
 def run_set_env_vars():
-    set_env_vars()
+    deactivate()
+    yield set_env_vars()
+    deactivate()
 
-@pytest.fixture(scope='class', autouse=False)
+@pytest.fixture(scope='function', autouse=False)
 def run_set_secret_env_vars():
-    set_secret_env_vars(api_key=test_api_key, queue_name=test_queue_name)
+    deactivate()
+    yield set_secret_env_vars(api_key=test_api_key, queue_name=test_queue_name)
+    deactivate()
 
 
 @pytest.mark.usefixtures('run_set_env_vars')
-class TestSetEnvVars():
+class TestSetEnvVars:
     def test_set_env_vars_creates_correct_enivronmental_response_format(self):
         expected_response_format = "json"
         test_response_format = os.getenv("response_format")
@@ -45,7 +49,7 @@ class TestSetEnvVars():
 
 
 @pytest.mark.usefixtures('run_set_secret_env_vars')
-class TestSetSecretEnvVars():
+class TestSetSecretEnvVars:
     def test_set_secret_env_vars_creates_correct_enivronmental_api_key(self):
         expected_api_key = "test"
         test_api_key = os.getenv("api_key")
@@ -57,22 +61,34 @@ class TestSetSecretEnvVars():
         assert test_queue_name == expected_queue_name
 
 
+@pytest.mark.usefixtures('run_set_secret_env_vars')
 class TestCreateSecretTfvarsFile:
     def test_create_tfvars_file_creates_a_file(self):
         create_secrets_tfvars_file()
         assert os.path.exists("./terraform/secrets.auto.tfvars")
 
-        os.remove('./terraform/secrets.auto.tfvars')
-
-    def test_create_tfvars_file_has_correct_conent(self, run_set_secret_env_vars):
+    def test_create_tfvars_file_has_correct_conent(self):
         create_secrets_tfvars_file()
         with open(
             "./terraform/secrets.auto.tfvars", "r", encoding="utf-8"
         ) as test_file_content:
             assert test_file_content.read() == 'queue_name = "test_queue_name.fifo"'
 
-        os.remove('./terraform/secrets.auto.tfvars')
 
+class TestDeactivate:
+    @pytest.mark.usefixtures('run_set_secret_env_vars')
+    def test_deactivate_removes_secrets_tfvars_file(self):
+        create_secrets_tfvars_file()
+        deactivate()
+        assert not os.path.exists("./terraform/secrets.auto.tfvars")
+
+    def test_decativate_removes_environs(self):
+        set_secret_env_vars(api_key=test_api_key, queue_name=test_queue_name)
+        assert os.getenv('api_key') == test_api_key
+        assert os.getenv('queue_name') == test_queue_name + '.fifo'
+        deactivate()
+        assert os.getenv('api_key') is None
+        assert os.getenv('queue_name') is None
 
 class TestSetupEnv:
     def test_setupenv_sets_correct_api_key_when_input_as_arg(self):
@@ -83,4 +99,9 @@ class TestSetupEnv:
         with SetupEnv(api_key=test_api_key, queue_name=test_queue_name):
             assert os.getenv('queue_name') == 'test_queue_name.fifo'
 
-    # def test_setupenv_deletes_envs_after_they_have_been_setup_correctly(self):
+    def test_setupenv_deletes_envs_after_they_have_been_setup_correctly(self):
+        with SetupEnv(api_key=test_api_key, queue_name=test_queue_name):
+            assert os.getenv('api_key') == 'test'
+            assert os.getenv('queue_name') == 'test_queue_name.fifo'
+        assert os.getenv('api_key') is None
+        assert os.getenv('queue_name') is None

@@ -7,6 +7,7 @@ from moto import mock_aws
 
 from src.main import get_queue, send_message_to_queue, input_search_term, input_from_date, run_app
 from src.setup import set_env_vars, set_secret_env_vars
+from test_setup import run_set_env_vars, run_set_secret_env_vars
 
 
 set_env_vars()
