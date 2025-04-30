@@ -1,15 +1,26 @@
 import os
 from configparser import ConfigParser
 
+global environ_list
+environ_list = [
+    'api_key', 
+    'queue_name',
+    'response_format',
+    'message_id',
+    'default_url',
+    'default_search_term',
+    'default_from_date',
+    'default_sort_by',
+    'default_sort_order'
+    ]
 
 def set_env_vars():
     config = ConfigParser()
     config.read("config.ini")
 
-    environ_list = [item for item in config["config"]]
-
     for item in environ_list:
-        os.environ[item] = config['config'][item]
+        if item in config['config']:
+            os.environ[item] = config['config'][item]
 
 
 def set_secret_env_vars(api_key=None, queue_name=None):
@@ -40,8 +51,8 @@ def deactivate():
     if os.path.exists(tfvars_secrets_path):
         os.remove(tfvars_secrets_path)
 
-    for item in os.environ:
-        if item not in ['PYTEST_CURRENT_TEST', 'AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY']:
+    for item in environ_list:
+        if item in os.environ:
             try:
                 os.environ.pop(item)
             except:
