@@ -8,13 +8,9 @@ from src.get_message_from_api_request import (
 )
 
 from src.setup import set_env_vars, set_secret_env_vars, deactivate
+from fixtures import run_set_env_vars, run_set_secret_env_vars, run_set_all_env_vars
 
-global test_api_key, test_queue_name
-test_api_key, test_queue_name  = 'test', 'test_queue_name'
-
-set_env_vars()
-set_secret_env_vars(api_key=test_api_key, queue_name=test_queue_name)
-
+@pytest.mark.usefixtures('run_set_all_env_vars')
 class TestCreateRequest:
     def test_create_request_returns_tuple(self):
         request = create_request()
@@ -53,14 +49,16 @@ class TestCreateRequest:
         assert request[0] == expected
 
 
-test_req = create_request()
-
+@pytest.mark.usefixtures('run_set_all_env_vars')
 class TestGetResults:
     def test_get_results_returns_a_list_when_given_correct_input(self):
+        test_req = create_request()
+        print(test_req)
         result = get_results(test_req)
         assert isinstance(result, list)
 
     def test_get_results_returns_list_of_only_dicts_when_given_correct_input(self):
+        test_req = create_request()
         result = get_results(test_req)
         for item in result:
             assert isinstance(item, dict)
@@ -71,6 +69,7 @@ class TestGetResults:
         set_secret_env_vars("test", "test_queue_name")
         with pytest.raises(Exception) as e_info:
             get_results(test_bad_request)
+
 
 class TestFormatResults:
     def test_format_result_returns_dict_when_given_correct_input(self):
@@ -83,7 +82,6 @@ class TestFormatResults:
         results = format_result(test_input)
         assert isinstance(results, dict)
 
-
     def test_format_result_returns_dict_with_three_kvs_when_given_correct_input(self):
         test_input = {
             "webPublicationDate": "test_webPublicationDate",
@@ -95,22 +93,21 @@ class TestFormatResults:
         assert len(results) == 3
 
 
+@pytest.mark.skip
 class TestSortMessageContent():
-    def sort_message_content_returns_list_when_given_a_correct_list_of_dicts(self):
+    def test_sort_message_content_returns_list_when_given_a_correct_list_of_dicts(self):
         test_input = [{"k": "v"}]
         result = sort_message_content(test_input, "k")
 
         assert isinstance(result, list)
 
-
-    def sort_message_return_list_with_10_items_when_given_list_with_more_than_10_items(self):
+    def test_sort_message_return_list_with_10_items_when_given_list_with_more_than_10_items(self):
         test_list = [{"k": i} for i in range(1, 100)]
         result = sort_message_content(test_list)
 
         assert len(result) == 10
 
-
-    def sort_message_content_returns_list_in_reverse_order_by_default(self):
+    def test_sort_message_content_returns_list_in_reverse_order_by_default(self):
         test_list = [{"k": "bbb"}, {"k": "aaa"}, {"k": "ccc"}]
         expected_list = [{"k": "ccc"}, {"k": "bbb"}, {"k": "aaa"}]
 

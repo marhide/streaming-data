@@ -6,29 +6,14 @@ import boto3
 import moto
 
 from src.main import get_queue, send_message_to_queue, input_search_term, input_from_date, run_app
-from src.setup import set_env_vars, set_secret_env_vars
-
-
-set_env_vars()
-set_secret_env_vars("test", "test_queue_name")
+from fixtures import mock_sqs, run_set_env_vars, run_set_secret_env_vars, test_api_key, test_queue_name, test_queue_url
 
 # this fixes the tests breaking in github actions as it needs the region to be specified whilst running on there
 os.environ["AWS_DEFAULT_REGION"] = "eu-west-2"
 
-global test_api_key, test_queue_name, test_queue_url, test_sqs_attributes
-test_api_key = 'test'
-test_queue_name = 'test_queue_name'
-test_queue_url = f'https://sqs.eu-west-2.amazonaws.com/123456789012/{test_queue_name}.fifo'
-test_sqs_attributes = {"FifoQueue": "True", "ContentBasedDeduplication": "True"}
-
-
-@pytest.fixture
-def mock_sqs():
-    with moto.mock_aws():
-        sqs = boto3.client("sqs")
-        sqs.create_queue(QueueName=test_queue_name+'.fifo', Attributes=test_sqs_attributes)
-        yield sqs
-        sqs.delete_queue(QueueUrl=test_queue_url)
+# test_api_key = 'test'
+# test_queue_name = 'test_queue_name'
+# test_queue_url = f'https://sqs.eu-west-2.amazonaws.com/123456789012/{test_queue_name}.fifo'
 
 
 @pytest.mark.usefixtures('mock_sqs')
@@ -39,6 +24,7 @@ class TestGetQueue:
 
 
 @pytest.mark.usefixtures('mock_sqs')
+@pytest.mark.usefixtures('run_set_env_vars')
 class TestSendMessageToQueue:
     def test_send_message_to_queue_returns_status_code_200_when_given_a_queue_obj_and_correct_message(self):
         test_queue = get_queue(test_queue_name+'.fifo')
@@ -68,6 +54,7 @@ class TestInputSearchTerm:
         result = input_search_term()
         assert result == 'test search with space at the end'
 
+    @pytest.mark.usefixtures('run_set_env_vars')
     def test_input_search_term_returns_correct_search_term_that_is_input_but_without_space_at_end(self, mocked_input):
         mocked_input.side_effect = ['']
         result = input_search_term()

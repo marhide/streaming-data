@@ -3,22 +3,10 @@ import os
 import pytest
 
 from src.setup import set_env_vars, set_secret_env_vars, create_secrets_tfvars_file, deactivate, SetupEnv
+from fixtures import run_set_env_vars, run_set_secret_env_vars
 
 global test_api_key, test_queue_name
 test_api_key, test_queue_name  = 'test', 'test_queue_name'
-
-@pytest.fixture(scope='function', autouse=False)
-def run_set_env_vars():
-    deactivate()
-    yield set_env_vars()
-    deactivate()
-
-@pytest.fixture(scope='function', autouse=False)
-def run_set_secret_env_vars():
-    deactivate()
-    yield set_secret_env_vars(api_key=test_api_key, queue_name=test_queue_name)
-    deactivate()
-
 
 @pytest.mark.usefixtures('run_set_env_vars')
 class TestSetEnvVars:
@@ -89,6 +77,7 @@ class TestDeactivate:
         deactivate()
         assert os.getenv('api_key') is None
         assert os.getenv('queue_name') is None
+
 
 class TestSetupEnv:
     def test_setupenv_sets_correct_api_key_when_input_as_arg(self):
