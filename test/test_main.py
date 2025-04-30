@@ -1,6 +1,5 @@
 import os
 from unittest import mock
-from pprint import pprint
 
 import boto3
 import moto
@@ -102,11 +101,9 @@ class TestInputFromDate():
         result = input_from_date()
         assert result == '1999-01-01'
 
-
 @mock.patch('src.main.input', create=True)
 @moto.mock_aws
 def test_run_app_returns_status_code_200_when_given_correct_args_and_test_inputs(mocked_input):
-    deactivate()
     test_api_key = 'test'
     test_queue_name = 'test_queue_name'
 
@@ -126,7 +123,6 @@ def test_run_app_returns_status_code_200_when_given_correct_args_and_test_inputs
 @mock.patch('builtins.input', create=True)
 @moto.mock_aws
 def test_run_app_returns_status_code_200_when_given_no_args_and_corrrect_inputs(mocked_input):
-    deactivate()
     test_queue_name = 'test_queue_name'
 
     mock_sqs = boto3.resource("sqs")
