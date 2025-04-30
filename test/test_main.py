@@ -107,10 +107,10 @@ def test_run_app_returns_status_code_200_when_given_correct_args_and_test_inputs
     test_api_key = 'test'
     test_queue_name = 'test_queue_name'
 
-    mock_sqs = boto3.resource("sqs")
+    sqs_client = boto3.client("sqs")
 
     test_sqs_attributes = {"FifoQueue": "True", "ContentBasedDeduplication": "True"}
-    mock_sqs.create_queue(
+    sqs_client.create_queue(
         QueueName=test_queue_name+'.fifo',
         Attributes=test_sqs_attributes,
     )
@@ -125,10 +125,10 @@ def test_run_app_returns_status_code_200_when_given_correct_args_and_test_inputs
 def test_run_app_returns_status_code_200_when_given_no_args_and_corrrect_inputs(mocked_input):
     test_queue_name = 'test_queue_name'
 
-    mock_sqs = boto3.resource("sqs")
+    sqs_client = boto3.client("sqs")
 
     test_sqs_attributes = {"FifoQueue": "True", "ContentBasedDeduplication": "True"}
-    mock_sqs.create_queue(
+    sqs_client.create_queue(
         QueueName=test_queue_name+'.fifo',
         Attributes=test_sqs_attributes,
     )
