@@ -1,11 +1,12 @@
 import os
 from unittest import mock
 
+import pytest
 import boto3
 import moto
 
 from src.main import get_queue, send_message_to_queue, input_search_term, input_from_date, run_app
-from src.setup import set_env_vars, set_secret_env_vars, deactivate
+from src.setup import set_env_vars, set_secret_env_vars
 
 
 set_env_vars()
@@ -14,55 +15,49 @@ set_secret_env_vars("test", "test_queue_name")
 # this fixes the tests breaking in github actions as it needs the region to be specified whilst running on there
 os.environ["AWS_DEFAULT_REGION"] = "eu-west-2"
 
+global test_api_key, test_queue_name, test_queue_url, test_sqs_attributes
+test_api_key = 'test'
+test_queue_name = 'test_queue_name'
+test_queue_url = f'https://sqs.eu-west-2.amazonaws.com/123456789012/{test_queue_name}.fifo'
+test_sqs_attributes = {"FifoQueue": "True", "ContentBasedDeduplication": "True"}
 
-@moto.mock_aws
-class TestGetQueue():
+
+@pytest.fixture
+def mock_sqs():
+    with moto.mock_aws():
+        sqs = boto3.client("sqs")
+        sqs.create_queue(QueueName=test_queue_name+'.fifo', Attributes=test_sqs_attributes)
+        yield sqs
+        sqs.delete_queue(QueueUrl=test_queue_url)
+
+
+@pytest.mark.usefixtures('mock_sqs')
+class TestGetQueue:
     def test_get_queue_returns_queue_object(self):
-        test_queue_name = "mock_queue"
-        mock_sqs = boto3.resource("sqs")
-        mock_sqs.create_queue(QueueName=test_queue_name)
-        test_queue = get_queue(test_queue_name)
-
-        assert (
-            test_queue.url == "https://sqs.eu-west-2.amazonaws.com/123456789012/mock_queue"
-        )
+        test_queue = get_queue(test_queue_name+'.fifo')
+        assert test_queue.url == test_queue_url
 
 
-@moto.mock_aws
-class TestSendMessageToQueue():
+@pytest.mark.usefixtures('mock_sqs')
+class TestSendMessageToQueue:
     def test_send_message_to_queue_returns_status_code_200_when_given_a_queue_obj_and_correct_message(self):
-        mock_sqs = boto3.resource("sqs")
-        test_queue_name = "mock_queue.fifo"
-        test_sqs_attributes = {"FifoQueue": "True", "ContentBasedDeduplication": "True"}
-        mock_sqs.create_queue(
-            QueueName=test_queue_name,
-            Attributes=test_sqs_attributes,
-        )
-        test_queue = get_queue(test_queue_name)
+        test_queue = get_queue(test_queue_name+'.fifo')
         test_message = str({"header": "body"})
 
         response = send_message_to_queue(test_queue, test_message)
         assert response["ResponseMetadata"]["HTTPStatusCode"] == 200
 
-    def test_send_message_to_queue_sends_the_correct_message_to_the_queue(self):
-        mock_sqs = boto3.resource("sqs")
-        sqs_client = boto3.client("sqs")
-        test_queue_name = "mock_queue.fifo"
-        test_sqs_attributes = {"FifoQueue": "True", "ContentBasedDeduplication": "True"}
-        mock_sqs.create_queue(
-            QueueName=test_queue_name,
-            Attributes=test_sqs_attributes,
-        )
-        test_queue = get_queue(test_queue_name)
+    def test_send_message_to_queue_sends_the_correct_message_to_the_queue(self, mock_sqs):
+        test_queue = get_queue(test_queue_name+'.fifo')
         test_message = str({"test_header": "test_body"})
 
         send_message_to_queue(test_queue, test_message)
-        recieved_message = sqs_client.receive_message(QueueUrl=test_queue_name)
+        recieved_message = mock_sqs.receive_message(QueueUrl=test_queue_url)
         assert recieved_message['Messages'][0]['Body'] == test_message
 
 
 @mock.patch('src.main.input', create=True)
-class TestInputSearchTerm():
+class TestInputSearchTerm:
     def test_input_search_term_returns_correct_search_term_that_is_input(self, mocked_input):
         mocked_input.side_effect = ['test search']
         result = input_search_term()
@@ -80,7 +75,7 @@ class TestInputSearchTerm():
 
 
 @mock.patch('src.main.input', create=True)
-class TestInputFromDate():
+class TestInputFromDate:
     def test_input_from_date_returns_correct_date_when_input_correct_date(self, mocked_input):
         mocked_input.side_effect = ['2000-01-01']
         result = input_from_date()
@@ -101,38 +96,16 @@ class TestInputFromDate():
         result = input_from_date()
         assert result == '1999-01-01'
 
-@mock.patch('src.main.input', create=True)
-@moto.mock_aws
-def test_run_app_returns_status_code_200_when_given_correct_args_and_test_inputs(mocked_input):
-    test_api_key = 'test'
-    test_queue_name = 'test_queue_name'
-
-    sqs_client = boto3.client("sqs")
-
-    test_sqs_attributes = {"FifoQueue": "True", "ContentBasedDeduplication": "True"}
-    sqs_client.create_queue(
-        QueueName=test_queue_name+'.fifo',
-        Attributes=test_sqs_attributes,
-    )
-
-    mocked_input.side_effect = ['test search', '2000-01-01',]
-    response = run_app(api_key=test_api_key, queue_name=test_queue_name)
-    assert response["ResponseMetadata"]["HTTPStatusCode"] == 200
-
 
 @mock.patch('builtins.input', create=True)
-@moto.mock_aws
-def test_run_app_returns_status_code_200_when_given_no_args_and_corrrect_inputs(mocked_input):
-    test_queue_name = 'test_queue_name'
+@pytest.mark.usefixtures('mock_sqs')
+class TestRunApp:
+    def test_run_app_returns_status_code_200_when_given_correct_args_and_test_inputs(self, mocked_input):
+        mocked_input.side_effect = ['test search', '2000-01-01',]
+        response = run_app(api_key=test_api_key, queue_name=test_queue_name)
+        assert response["ResponseMetadata"]["HTTPStatusCode"] == 200
 
-    sqs_client = boto3.client("sqs")
-
-    test_sqs_attributes = {"FifoQueue": "True", "ContentBasedDeduplication": "True"}
-    sqs_client.create_queue(
-        QueueName=test_queue_name+'.fifo',
-        Attributes=test_sqs_attributes,
-    )
-
-    mocked_input.side_effect = ['test', test_queue_name, 'test search', '2000-01-01']
-    response = run_app()
-    assert response["ResponseMetadata"]["HTTPStatusCode"] == 200
+    def test_run_app_returns_status_code_200_when_given_no_args_and_corrrect_inputs(self, mocked_input):
+        mocked_input.side_effect = [test_api_key, test_queue_name, 'test search', '2000-01-01']
+        response = run_app()
+        assert response["ResponseMetadata"]["HTTPStatusCode"] == 200

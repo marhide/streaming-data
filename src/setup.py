@@ -58,7 +58,7 @@ def deactivate():
             except:
                 raise Exception(f"{item} has not been set as an os.environ")
             
-    print('deactivation successful')
+    print('\ndeactivation successful')
 
 
 class SetupEnv():
