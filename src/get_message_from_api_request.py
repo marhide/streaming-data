@@ -42,6 +42,8 @@ def format_result(result):
 
 def match_sort_by(sort_by=None, fn_has_ran=False):
 
+    correct_sort_by_list = ['webPublicationDate', 'webTitle', 'webUrl']
+
     if sort_by is not None:
         try:
             sort_by = sort_by.lower()
@@ -62,25 +64,26 @@ def match_sort_by(sort_by=None, fn_has_ran=False):
         sort_by = getenv("default_sort_by")
     
     if fn_has_ran:
-        if sort_by in ['webPublicationDate', 'webTitle', 'webUrl']:
+        if sort_by in correct_sort_by_list:
             return sort_by
         else:
             return 'webPublicationDate'
     
     return match_sort_by(sort_by, fn_has_ran=True) 
 
-    
-
 
 def sort_message_content(results, sort_by=None, sort_order=None):
+
     sort_by = match_sort_by(sort_by)
 
-    if sort_order not in ["asc", "desc"]:
+    correct_sort_orders = ["asc", "desc"]
+
+    if sort_order not in correct_sort_orders:
         sort_order = getenv("default_sort_order")
 
-    sorted_results = sorted(
-        results, key=lambda result: result[sort_by], reverse=sort_order != "asc"
-    )
+    reverse_order = sort_order != 'asc'
+
+    sorted_results = sorted(results, key=lambda result: result[sort_by], reverse=reverse_order)
     message_body = sorted_results[:10]
 
     return message_body

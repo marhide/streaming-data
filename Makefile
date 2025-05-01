@@ -1,5 +1,5 @@
 PROJECT_NAME = streaming-data
-REGION = eu-west-2
+REGION = ${AWS_DEFAULT_REGION}
 PYTHON_INTERPRETER = python
 WD=$(shell pwd)
 PYTHONPATH=${WD}
@@ -9,7 +9,7 @@ PIP:=pip
 VENV = venv
 PYTHON = $(VENV)/bin/python3
 ##export myQueueName=[queuename]
-QUEUE_NAME = ${myQueueName}
+QUEUE_NAME = ${MY_SQS_QUEUE_NAME}
 
 CHDIR_SHELL := $(SHELL)
 define chdir
