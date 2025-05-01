@@ -39,23 +39,39 @@ def format_result(result):
 
     return formatted_result
 
+def match_sort_by(sort_by=None, fn_has_ran=False):
+
+    if sort_by is not None:
+        try:
+            sort_by = sort_by.lower()
+        except:
+            raise AttributeError
+
+    date_match_list = ['webpublicationdate', 'publicationdate', 'date']
+    title_match_list = ['webtitle', 'title', 'article', 'name']
+    url_match_list = ['weburl', 'url']
+
+    if sort_by in date_match_list:
+        sort_by = 'webPublicationDate'
+    elif sort_by in title_match_list:
+        sort_by = 'webTitle'
+    elif sort_by in url_match_list:
+        sort_by = 'webUrl'
+    else:
+        sort_by = getenv("default_sort_by")
+    
+    if fn_has_ran:
+        if sort_by in ['webPublicationDate', 'webTitle', 'webUrl']:
+            return sort_by
+        else:
+            return 'webPublicationDate'
+    
+    return match_sort_by(sort_by, fn_has_ran=True) 
+
+    
+
 
 def sort_message_content(results, sort_by=None, sort_order=None):
-
-    def match_sort_by(sort_by, fn_has_ran=False):
-        match sort_by:
-            case "title":
-                return "webTitle"
-            case "article":
-                return "webTitle"
-            case _:
-                sort_by = getenv("default_sort_by")
-                return (
-                    "webPublicationDate"
-                    if fn_has_ran
-                    else match_sort_by(sort_by, fn_has_ran=True)
-                )
-
     sort_by = match_sort_by(sort_by)
 
     if sort_order not in ["asc", "desc"]:

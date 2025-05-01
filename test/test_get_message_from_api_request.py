@@ -1,3 +1,5 @@
+import os
+
 import pytest
 from copy import deepcopy
 
@@ -5,6 +7,7 @@ from src.get_message_from_api_request import (
     create_request,
     format_result,
     get_results,
+    match_sort_by,
     sort_message_content,
 )
 
@@ -93,6 +96,52 @@ class TestFormatResults:
         assert len(results) == 3
 
 
+@pytest.mark.usefixtures('run_set_env_vars')
+class TestMatchSortBy:
+    def test_match_sort_by_returns_default_sort_by_from_env_when_passed_nothing(self):
+        expected = os.getenv('default_sort_by')
+        result = match_sort_by()
+        assert result == expected
+
+    def test_match_sort_by_returns_webTitle_when_passed_valid_title(self):
+        test_title_match_list = ['webTitle', 'title', 'article', 'name']
+        result_title_match_list = map(match_sort_by, test_title_match_list)
+        for item in result_title_match_list:
+            assert item == 'webTitle'
+
+    def test_match_sort_by_returns_webPublicationDate_when_passed_valid_date_order_name(self):
+        test_date_match_list = ['webPublicationDate', 'publicationdate', 'date']
+        result_date_match_list = map(match_sort_by, test_date_match_list)
+        for item in result_date_match_list:
+            assert item == 'webPublicationDate'
+
+    def test_match_sort_by_returns_weburl_when_passed_valid_url_order_name(self):    
+        test_url_match_list = ['webUrl', 'url']
+        result_url_match_list = map(match_sort_by, test_url_match_list)
+        for item in result_url_match_list:
+            assert item == 'webUrl'
+
+    def test_match_sort_by_returns_default_sort_by_when_given_wrong_input(self):
+        expected = os.getenv('default_sort_by')
+        result = match_sort_by('wrong input 999')
+        assert result == expected
+
+    def test_match_sort_by_returns_correct_sort_by_when_given_input_with_wrong_case(self):
+        test_title_match_list = ['webtiTle', 'tiTLE', 'Article', 'nAmE']
+        result_title_match_list = map(match_sort_by, test_title_match_list)
+        for item in result_title_match_list:
+            assert item == 'webTitle'
+
+    def test_match_sort_by_raises_error_when_given_wrong_data_type(self):
+        with pytest.raises(AttributeError):
+            match_sort_by(9999)
+
+    def test_match_sort_by_returns_webPublicationDate_if_given_no_input_and_default_sort_by_env_is_wrong(self):
+        os.environ['default_sort_by'] = 'wrong value for testing'
+        assert os.getenv('default_sort_by') != 'webPublicationDate'
+        result = match_sort_by()
+        assert result == 'webPublicationDate'
+
 
 
 test_result_list = [
@@ -101,7 +150,6 @@ test_result_list = [
     {'webPublicationDate': '2000-01-03', 'webTitle': 'title3', 'webUrl': 'https://www.theguardian.com/article3'},
     {'webPublicationDate': '2000-01-04', 'webTitle': 'title4', 'webUrl': 'https://www.theguardian.com/article4'},
     {'webPublicationDate': '2000-01-05', 'webTitle': 'title5', 'webUrl': 'https://www.theguardian.com/article5'}]
-
 
 class TestSortMessageContent():
     def test_sort_message_content_returns_list_when_given_a_correct_list_of_correct_dicts(self):
