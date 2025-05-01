@@ -65,7 +65,7 @@ coverage:
 	$(call execute_in_env, $(PIP) install coverage)
 
 ## Set up dev requirements (bandit, safety, black)
-dev-setup: bandit safety black coverage
+dev-setup: requirements bandit safety black coverage
 
 
 setup: create-environment dev-setup 

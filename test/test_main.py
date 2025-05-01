@@ -11,14 +11,10 @@ from fixtures import mock_sqs, run_set_env_vars, run_set_secret_env_vars, test_a
 # this fixes the tests breaking in github actions as it needs the region to be specified whilst running on there
 os.environ["AWS_DEFAULT_REGION"] = "eu-west-2"
 
-# test_api_key = 'test'
-# test_queue_name = 'test_queue_name'
-# test_queue_url = f'https://sqs.eu-west-2.amazonaws.com/123456789012/{test_queue_name}.fifo'
-
 
 @pytest.mark.usefixtures('mock_sqs')
 class TestGetQueue:
-    def test_get_queue_returns_queue_object(self):
+    def test_get_queue_returns_queue_object_wth_correct_url(self):
         test_queue = get_queue(test_queue_name+'.fifo')
         assert test_queue.url == test_queue_url
 

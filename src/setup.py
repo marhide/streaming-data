@@ -1,7 +1,6 @@
 import os
 from configparser import ConfigParser
 
-global environ_list
 environ_list = [
     'api_key', 
     'queue_name',

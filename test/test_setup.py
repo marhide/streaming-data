@@ -3,10 +3,8 @@ import os
 import pytest
 
 from src.setup import set_env_vars, set_secret_env_vars, create_secrets_tfvars_file, deactivate, SetupEnv
-from fixtures import run_set_env_vars, run_set_secret_env_vars
+from fixtures import run_set_env_vars, run_set_secret_env_vars, test_api_key, test_queue_name
 
-global test_api_key, test_queue_name
-test_api_key, test_queue_name  = 'test', 'test_queue_name'
 
 @pytest.mark.usefixtures('run_set_env_vars')
 class TestSetEnvVars:
@@ -67,6 +65,7 @@ class TestDeactivate:
     @pytest.mark.usefixtures('run_set_secret_env_vars')
     def test_deactivate_removes_secrets_tfvars_file(self):
         create_secrets_tfvars_file()
+        assert os.path.exists("./terraform/secrets.auto.tfvars")
         deactivate()
         assert not os.path.exists("./terraform/secrets.auto.tfvars")
 

@@ -1,4 +1,5 @@
 import pytest
+from copy import deepcopy
 
 from src.get_message_from_api_request import (
     create_request,
@@ -7,8 +8,9 @@ from src.get_message_from_api_request import (
     sort_message_content,
 )
 
-from src.setup import set_env_vars, set_secret_env_vars, deactivate
+from src.setup import set_secret_env_vars
 from fixtures import run_set_env_vars, run_set_secret_env_vars, run_set_all_env_vars
+
 
 @pytest.mark.usefixtures('run_set_all_env_vars')
 class TestCreateRequest:
@@ -53,7 +55,6 @@ class TestCreateRequest:
 class TestGetResults:
     def test_get_results_returns_a_list_when_given_correct_input(self):
         test_req = create_request()
-        print(test_req)
         result = get_results(test_req)
         assert isinstance(result, list)
 
@@ -66,7 +67,6 @@ class TestGetResults:
     def test_get_results_raises_an_error_when_given_bad_request(self):
         set_secret_env_vars("bad_test_api_key", "test_queue_name")
         test_bad_request = create_request()
-        set_secret_env_vars("test", "test_queue_name")
         with pytest.raises(Exception) as e_info:
             get_results(test_bad_request)
 
@@ -93,23 +93,23 @@ class TestFormatResults:
         assert len(results) == 3
 
 
-@pytest.mark.skip
-class TestSortMessageContent():
-    def test_sort_message_content_returns_list_when_given_a_correct_list_of_dicts(self):
-        test_input = [{"k": "v"}]
-        result = sort_message_content(test_input, "k")
 
+
+test_result_list = [
+    {'webPublicationDate': '2000-01-01', 'webTitle': 'title1', 'webUrl': 'https://www.theguardian.com/article1'},
+    {'webPublicationDate': '2000-01-02', 'webTitle': 'title2', 'webUrl': 'https://www.theguardian.com/article2'},
+    {'webPublicationDate': '2000-01-03', 'webTitle': 'title3', 'webUrl': 'https://www.theguardian.com/article3'},
+    {'webPublicationDate': '2000-01-04', 'webTitle': 'title4', 'webUrl': 'https://www.theguardian.com/article4'},
+    {'webPublicationDate': '2000-01-05', 'webTitle': 'title5', 'webUrl': 'https://www.theguardian.com/article5'}]
+
+
+class TestSortMessageContent():
+    def test_sort_message_content_returns_list_when_given_a_correct_list_of_correct_dicts(self):
+        result = sort_message_content(test_result_list)
         assert isinstance(result, list)
 
-    def test_sort_message_return_list_with_10_items_when_given_list_with_more_than_10_items(self):
-        test_list = [{"k": i} for i in range(1, 100)]
-        result = sort_message_content(test_list)
-
-        assert len(result) == 10
-
     def test_sort_message_content_returns_list_in_reverse_order_by_default(self):
-        test_list = [{"k": "bbb"}, {"k": "aaa"}, {"k": "ccc"}]
-        expected_list = [{"k": "ccc"}, {"k": "bbb"}, {"k": "aaa"}]
-
-        result = sort_message_content(test_list)
+        expected_list = deepcopy(test_result_list)
+        expected_list.reverse()
+        result = sort_message_content(test_result_list)
         assert result == expected_list
