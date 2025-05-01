@@ -39,6 +39,7 @@ def format_result(result):
 
     return formatted_result
 
+
 def match_sort_by(sort_by=None, fn_has_ran=False):
 
     if sort_by is not None:
