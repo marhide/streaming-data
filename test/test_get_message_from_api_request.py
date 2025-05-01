@@ -158,6 +158,19 @@ test_unordered_result_list = [
     {'webPublicationDate': '2000-01-03', 'webTitle': 'title3', 'webUrl': 'https://www.theguardian.com/article3'},
     {'webPublicationDate': '2000-01-01', 'webTitle': 'title1', 'webUrl': 'https://www.theguardian.com/article1'}]
 
+test_result_title_list = [
+    {'webPublicationDate': '', 'webTitle': 'title1', 'webUrl': ''},
+    {'webPublicationDate': '', 'webTitle': 'title2', 'webUrl': ''},
+    {'webPublicationDate': '', 'webTitle': 'title3', 'webUrl': ''},
+    {'webPublicationDate': '', 'webTitle': 'title4', 'webUrl': ''},
+    {'webPublicationDate': '', 'webTitle': 'title5', 'webUrl': ''}]
+
+test_unordered_title_list = [
+    {'webPublicationDate': '', 'webTitle': 'title2', 'webUrl': ''},
+    {'webPublicationDate': '', 'webTitle': 'title5', 'webUrl': ''},
+    {'webPublicationDate': '', 'webTitle': 'title3', 'webUrl': ''},
+    {'webPublicationDate': '', 'webTitle': 'title4', 'webUrl': ''},
+    {'webPublicationDate': '', 'webTitle': 'title1', 'webUrl': ''}]
 
 class TestSortMessageContent():
     def test_sort_message_content_returns_list_when_given_a_correct_list_of_correct_dicts(self):
@@ -176,6 +189,20 @@ class TestSortMessageContent():
         result = sort_message_content(test_unordered_result_list, sort_order='desc')
         assert result == expected_list
 
-    def test_sort_message_content_returns_list_in_descending_order_when_passed_asc_as_sort_order_arg(self):
+    def test_sort_message_content_returns_list_in_ascending_order_when_passed_asc_as_sort_order_arg(self):
         result = sort_message_content(test_unordered_result_list, sort_order='asc')
         assert result == test_result_list
+
+    def test_sort_message_conent_returns_list_in_descending_title_order_when_passed_title_as_sort_by_arg(self):
+        test_title_match_list = ['webTitle', 'title', 'article', 'name', 'TITLE', 'arTicle']
+        expected_list = deepcopy(test_result_title_list)
+        expected_list.reverse()
+        for test_sort_by in test_title_match_list:
+            result = sort_message_content(test_unordered_title_list, sort_by=test_sort_by)
+            assert result == expected_list
+
+    def test_sort_message_conent_returns_list_in_ascending_title_order_when_passed_title_as_sort_by_arg_and_asc_as_sort_order_arg(self):
+        test_title_match_list = ['webTitle', 'title', 'article', 'name', 'TITLE', 'arTicle']
+        for test_sort_by in test_title_match_list:
+            result = sort_message_content(test_unordered_title_list, sort_by=test_sort_by, sort_order='asc')
+            assert result == test_result_title_list
