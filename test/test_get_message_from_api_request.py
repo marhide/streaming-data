@@ -151,13 +151,31 @@ test_result_list = [
     {'webPublicationDate': '2000-01-04', 'webTitle': 'title4', 'webUrl': 'https://www.theguardian.com/article4'},
     {'webPublicationDate': '2000-01-05', 'webTitle': 'title5', 'webUrl': 'https://www.theguardian.com/article5'}]
 
+test_unordered_result_list = [
+    {'webPublicationDate': '2000-01-04', 'webTitle': 'title4', 'webUrl': 'https://www.theguardian.com/article4'},
+    {'webPublicationDate': '2000-01-02', 'webTitle': 'title2', 'webUrl': 'https://www.theguardian.com/article2'},
+    {'webPublicationDate': '2000-01-05', 'webTitle': 'title5', 'webUrl': 'https://www.theguardian.com/article5'},
+    {'webPublicationDate': '2000-01-03', 'webTitle': 'title3', 'webUrl': 'https://www.theguardian.com/article3'},
+    {'webPublicationDate': '2000-01-01', 'webTitle': 'title1', 'webUrl': 'https://www.theguardian.com/article1'}]
+
+
 class TestSortMessageContent():
     def test_sort_message_content_returns_list_when_given_a_correct_list_of_correct_dicts(self):
         result = sort_message_content(test_result_list)
         assert isinstance(result, list)
 
-    def test_sort_message_content_returns_list_in_reverse_order_by_default(self):
+    def test_sort_message_content_returns_list_in_descending_date_order_by_default(self):
         expected_list = deepcopy(test_result_list)
         expected_list.reverse()
         result = sort_message_content(test_result_list)
         assert result == expected_list
+
+    def test_sort_message_content_returns_list_in_descending_order_when_passed_desc_as_sort_order_arg(self):
+        expected_list = deepcopy(test_result_list)
+        expected_list.reverse()
+        result = sort_message_content(test_unordered_result_list, sort_order='desc')
+        assert result == expected_list
+
+    def test_sort_message_content_returns_list_in_descending_order_when_passed_asc_as_sort_order_arg(self):
+        result = sort_message_content(test_unordered_result_list, sort_order='asc')
+        assert result == test_result_list
