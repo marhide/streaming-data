@@ -8,8 +8,7 @@ PROFILE = default
 PIP:=pip
 VENV = venv
 PYTHON = $(VENV)/bin/python3
-##export myQueueName=[queuename]
-QUEUE_NAME = ${MY_SQS_QUEUE_NAME}
+QUEUE_NAME = ${SQS_QUEUE_NAME}
 
 CHDIR_SHELL := $(SHELL)
 define chdir

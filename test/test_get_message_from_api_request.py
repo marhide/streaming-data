@@ -8,6 +8,7 @@ from src.get_message_from_api_request import (
     format_result,
     get_results,
     match_sort_by,
+    match_sort_order_to_bool,
     sort_message_content,
 )
 
@@ -143,6 +144,75 @@ class TestMatchSortBy:
         assert result == 'webPublicationDate'
 
 
+class TestMatchSortOrderToBool:
+    def test_match_sort_order_to_bool_returns_bool(self):
+        result = match_sort_order_to_bool()
+        assert isinstance(result, bool)
+
+    def test_match_sort_order_to_bool_return_true_when_passed_desc(self):
+        result = match_sort_order_to_bool('desc')
+        assert result is True
+
+    def test_match_sort_order_to_bool_return_false_when_passed_asc(self):
+        result = match_sort_order_to_bool('asc')
+        assert result is False
+
+    
+    def test_match_sort_order_to_bool_return_true_when_passed_desc_in_wrong_case(self):
+        result = match_sort_order_to_bool('dEsc')
+        assert result is True
+
+    def test_match_sort_order_to_bool_return_false_when_passed_asc_in_wrong_case(self):
+        result = match_sort_order_to_bool('aSc')
+        assert result is False
+
+    def test_match_sort_order_to_bool_returns_false_when_env_var_set_to_asc_and_passed_nothing(self):
+        os.environ['default_sort_order'] = 'asc'
+        assert os.getenv('default_sort_order') == 'asc'
+        result = match_sort_order_to_bool()
+        assert result is False
+
+    def test_match_sort_order_to_bool_returns_true_when_env_var_set_to_desc_and_passed_nothing(self):
+        os.environ['default_sort_order'] = 'desc'
+        assert os.getenv('default_sort_order') == 'desc'
+        result = match_sort_order_to_bool()
+        assert result is True
+
+    def test_match_sort_order_to_bool_returns_false_when_env_var_set_to_asc_and_passed_incorrect_data_type(self):
+        os.environ['default_sort_order'] = 'asc'
+        assert os.getenv('default_sort_order') == 'asc'
+        result = match_sort_order_to_bool(999)
+        assert result is False
+
+    def test_match_sort_order_to_bool_returns_true_when_env_var_set_to_desc_and_passed_incorrect_data_type(self):
+        os.environ['default_sort_order'] = 'desc'
+        assert os.getenv('default_sort_order') == 'desc'
+        result = match_sort_order_to_bool(999)
+        assert result is True
+
+    def test_match_sort_order_to_bool_returns_true_when_passed_nothing_and_env_var_set_to_neither_asc_or_desc(self):
+        os.environ['default_sort_order'] = 'something else'
+        assert os.getenv('default_sort_order') == 'something else'
+        result = match_sort_order_to_bool()
+        assert result is True
+    
+    def test_match_sort_order_to_bool_returns_true_when_passed_something_incorrect_and_env_var_set_to_neither_asc_or_desc(self):
+        os.environ['default_sort_order'] = 'something else'
+        assert os.getenv('default_sort_order') == 'something else'
+        result = match_sort_order_to_bool('incorrect')
+        assert result is True
+
+    def test_match_sort_order_to_bool_returns_true_when_passed_nothing_and_env_var_set_to_desc_in_wrong_case(self):
+        os.environ['default_sort_order'] = 'deSC'
+        assert os.getenv('default_sort_order') == 'deSC'
+        result = match_sort_order_to_bool()
+        assert result is True
+
+    def test_match_sort_order_to_bool_returns_false_when_passed_nothing_and_env_var_set_to_asc_in_wrong_case(self):
+        os.environ['default_sort_order'] = 'ASC'
+        assert os.getenv('default_sort_order') == 'ASC'
+        result = match_sort_order_to_bool()
+        assert result is False
 
 test_result_list = [
     {'webPublicationDate': '2000-01-01', 'webTitle': 'title1', 'webUrl': 'https://www.theguardian.com/article1'},
@@ -172,16 +242,27 @@ test_unordered_title_list = [
     {'webPublicationDate': '', 'webTitle': 'title4', 'webUrl': ''},
     {'webPublicationDate': '', 'webTitle': 'title1', 'webUrl': ''}]
 
+# @pytest.mark.usefixtures('run_set_env_vars')
 class TestSortMessageContent():
     def test_sort_message_content_returns_list_when_given_a_correct_list_of_correct_dicts(self):
         result = sort_message_content(test_result_list)
         assert isinstance(result, list)
 
-    def test_sort_message_content_returns_list_in_descending_date_order_by_default(self):
+    def test_sort_message_content_returns_list_in_descending_date_order_when_env_var_is_set_to_desc(self):
+        os.environ['default_sort_order'] = 'desc'
+        assert os.getenv('default_sort_order') == 'desc'
         expected_list = deepcopy(test_result_list)
         expected_list.reverse()
-        result = sort_message_content(test_result_list)
+        result = sort_message_content(test_unordered_result_list)
         assert result == expected_list
+
+    def test_sort_message_content_returns_list_in_asc_date_order_when_env_var_is_set_to_asc(self):
+        os.environ['default_sort_order'] = 'asc'
+        assert os.getenv('default_sort_order') == 'asc'
+        # expected_list = deepcopy(test_result_list)
+        # expected_list.reverse()
+        result = sort_message_content(test_unordered_result_list)
+        assert result == test_result_list
 
     def test_sort_message_content_returns_list_in_descending_order_when_passed_desc_as_sort_order_arg(self):
         expected_list = deepcopy(test_result_list)
@@ -194,6 +275,8 @@ class TestSortMessageContent():
         assert result == test_result_list
 
     def test_sort_message_conent_returns_list_in_descending_title_order_when_passed_title_as_sort_by_arg(self):
+        os.environ['default_sort_order'] = 'desc'
+        assert os.getenv('default_sort_order') == 'desc'
         test_title_match_list = ['webTitle', 'title', 'article', 'name', 'TITLE', 'arTicle']
         expected_list = deepcopy(test_result_title_list)
         expected_list.reverse()

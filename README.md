@@ -30,7 +30,7 @@ you will then need to export these environmental varibales to allow the applicat
 
 you will need to choose a name for the SQS queue and also export it as an environmental variable
 
-`$ export MY_SQS_QUEUE_NAME=[the name you want for your sqs queue]`
+`$ export SQS_QUEUE_NAME=[the name you want for your sqs queue]`
 
 hint: when exporting these environmental variables, don't include the square brackets or quotation marks.
 
@@ -46,12 +46,12 @@ finally, to run the application, run
 
 `make run-app`
 
-about testing:
+## About testing:
 
 install the testing library requirements with
 
-make test-requirements
+`make test-requirements`
 
 to test, run
 
-make unit-test
+`make unit-test`

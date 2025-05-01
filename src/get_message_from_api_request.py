@@ -72,6 +72,25 @@ def match_sort_by(sort_by=None, fn_has_ran=False):
     return match_sort_by(sort_by, fn_has_ran=True) 
 
 
+def match_sort_order_to_bool(sort_order=None):
+
+    correct_sort_orders = ["asc", "desc"]
+
+    if isinstance(sort_order, str):
+        sort_order = sort_order.lower()
+
+    if sort_order not in correct_sort_orders:
+        sort_order = getenv('default_sort_order')
+        if isinstance(sort_order, str):
+            sort_order = sort_order.lower()
+
+    if sort_order in correct_sort_orders:
+        reverse_order_bool = sort_order != 'asc'
+    else:
+        reverse_order_bool = True
+
+    return reverse_order_bool
+
 def sort_message_content(results, sort_by=None, sort_order=None):
 
     sort_by = match_sort_by(sort_by)
@@ -81,7 +100,7 @@ def sort_message_content(results, sort_by=None, sort_order=None):
     if sort_order not in correct_sort_orders:
         sort_order = getenv("default_sort_order")
 
-    reverse_order = sort_order != 'asc'
+    reverse_order = match_sort_order_to_bool(sort_order)
 
     sorted_results = sorted(results, key=lambda result: result[sort_by], reverse=reverse_order)
     message_body = sorted_results[:10]
