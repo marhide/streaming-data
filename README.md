@@ -23,7 +23,9 @@ create a secret access key for this user.
 you will then need to export these enviromental varibales to allow the application to use your IAM user
 
 `$ export AWS_DEFAULT_REGION=[the aws region you would like to use eg. 'eu-west-2']`
+
 `$ export AWS_ACCESS_KEY_ID=[your aws access key id]`
+
 `$ export AWS_SECRET_ACCESS_KEY=[your aws secret access key]`
 
 you will need to choose a name for the SQS queue and also export it as an environmental variable
