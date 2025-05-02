@@ -1,8 +1,10 @@
 # streaming-data
 
+
 ## What is it and what does it do?
 
 streaming-data is an application that gets data about articles from The Guardian's API and sends them to an AWS SQS queue.
+
 
 ## How do you use it?
 
@@ -11,6 +13,7 @@ First you will need to generate a key for The Guardian's API at [open-platform.t
 Make sure to save the API key somewhere as it is needed via ether user input or to be set as an environmental variable run the application. To set the Guardian API key as an environmental variable, for default usage by the application, run the command
 
 `export GUARDIAN_API_KEY=[you guardian api key]`
+
 
 If you don't have one already, create an IAM user in AWS with permissions that grants full access to AWS's SQS.
 Create a secret access key for this IAM user if there isn't one already.
@@ -23,23 +26,28 @@ You will then need to export these environmental varibales to allow the applicat
 
 `export AWS_SECRET_ACCESS_KEY=[your aws secret access key]`
 
+
 Now choose a name for the SQS queue and export it as an environmental variable too.
 
 `export SQS_QUEUE_NAME=[the name you want for your sqs queue]`
 
 *Hint: When exporting these environmental variables, don't include the square brackets or quotation marks.*
 
+
 To create a virtual environment and to install dependencies needed for the application, run the command
 
 `make dev-setup`
+
 
 If there isn't already an SQS queue for the application to send the results from the Guardian API to, you will have to create one with the following command. This SQS queue will have the same name as the value of the `SQS_QUEUE_NAME` variable.
 
 `make new-sqs-queue`
 
+
 Once an SQS queue has been created, you can run the application, by using the command
 
 `make run-app`
+
 
 ## About testing:
 
