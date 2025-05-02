@@ -4,17 +4,22 @@ from os import getenv
 
 
 def create_request(search_term=None, from_date=None):
+    '''Creates and returns a request for the API using in the correct format using the URL, search term and from date.'''
 
     url = getenv("default_url")
     url += "q=" + search_term.replace(" ", "%20") if search_term else ""
     url += "&from-date=" + from_date if from_date else ""
 
-    request = (url, {"api-key": getenv("api_key"), "format": getenv("response_format")})
+    api_key = getenv("api_key")
+    response_format = getenv('response_format')
+
+    request = (url, {"api-key": api_key, "format": response_format})
 
     return request
 
 
 def get_results(request):
+    '''Sends a request to the API reuturns a list of all articles the API returned.'''
 
     response = requests.get(*request)
     status_code = response.status_code
@@ -30,6 +35,7 @@ def get_results(request):
 
 
 def format_result(result):
+    'Formats an individual article result from the API into the format specified by the brief.'
 
     formatted_result = {
         "webPublicationDate": result["webPublicationDate"],
@@ -41,6 +47,7 @@ def format_result(result):
 
 
 def match_sort_by(sort_by=None, fn_has_ran=False):
+    '''Takes an input string and matches it with a correct sort by type to return.'''
 
     correct_sort_by_list = ['webPublicationDate', 'webTitle', 'webUrl']
 
@@ -73,6 +80,8 @@ def match_sort_by(sort_by=None, fn_has_ran=False):
 
 
 def match_sort_order_to_bool(sort_order=None):
+    '''Matches a sort order type, eg. 'asc', to a boolean and returns the boolean value.'''
+
 
     correct_sort_orders = ["asc", "desc"]
 
@@ -93,6 +102,7 @@ def match_sort_order_to_bool(sort_order=None):
 
 
 def sort_message_content(results, sort_by=None, sort_order=None):
+    '''Sorts and returns a list of article data by a specified key and returns the first 10 results.'''
 
     sort_by = match_sort_by(sort_by)
 
@@ -110,6 +120,7 @@ def sort_message_content(results, sort_by=None, sort_order=None):
 
 
 def get_message(search_term=None, from_date=None, sort_by=None, sort_order=None):
+    '''Creates a search query for the API and sorts the response and returns it.'''
 
     request = create_request(search_term, from_date)
     results = get_results(request)
