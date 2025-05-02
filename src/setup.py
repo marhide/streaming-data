@@ -17,6 +17,7 @@ environ_list = [
 
 def set_env_vars():
     '''Reads values from the config file and sets them as environmental variables.'''
+
     config = ConfigParser()
     config.read("config.ini")
 
@@ -27,6 +28,7 @@ def set_env_vars():
 
 def set_secret_env_vars(api_key=None, queue_name=None):
     '''Sets it's given arguments as environmental variables. Prompts the user to input them if not passed any.'''
+
     if api_key is None:
         api_key = input("enter your Guardian API key: ")
 
@@ -39,6 +41,7 @@ def set_secret_env_vars(api_key=None, queue_name=None):
 
 def create_secrets_tfvars_file(queue_name=None):
     '''Function used by the Makefile to create a .tfvars file containing the name of the SQS queue.'''
+
     if queue_name is None:
         queue_name = os.getenv("queue_name")
 
@@ -50,7 +53,8 @@ def create_secrets_tfvars_file(queue_name=None):
 
 
 def deactivate():
-    '''Deletes the tfvars file if it exists and removes at environmental variables set by the running the application'''
+    '''Deletes the tfvars file if it exists and removes at environmental variables set by the running the application.'''
+
     tfvars_secrets_path = "./terraform/secrets.auto.tfvars"
 
     if os.path.exists(tfvars_secrets_path):
@@ -67,6 +71,7 @@ def deactivate():
 
 
 class SetupEnv():
+    '''A class to be used as a context manager that sets all needed environmental variables and then deletes them when closing.'''
     def __init__(self, api_key, queue_name):
         self.api_key = api_key
         self.queue_name = queue_name

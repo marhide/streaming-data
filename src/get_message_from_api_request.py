@@ -35,7 +35,7 @@ def get_results(request):
 
 
 def format_result(result):
-    'Formats an individual article result from the API into the format specified by the brief.'
+    '''Formats an individual article result from the API into the format specified by the brief.'''
 
     formatted_result = {
         "webPublicationDate": result["webPublicationDate"],

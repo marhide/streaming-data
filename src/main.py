@@ -14,6 +14,8 @@ except ImportError:
 
 
 def input_search_term():
+    '''Ask the user to input a search term and returns it. Returns the deafault search term from the config file if the user enters an empty string.'''
+
     search_term = input("enter search term: ").strip()
 
     if search_term == "":
@@ -23,6 +25,8 @@ def input_search_term():
 
 
 def validate_date(date_text):
+    '''Takes a date in the form of a string and checks if it is in yyyy-mm-dd format, raising and error if it is not.'''
+
     try:
         date.fromisoformat(date_text)
         return True
@@ -31,6 +35,8 @@ def validate_date(date_text):
 
 
 def input_from_date():
+    '''Ask the user the input a date and only returns it is it is in the correct format.'''
+
     counter = 0
     while True:
         counter += 1
@@ -47,6 +53,7 @@ def input_from_date():
 
 
 def get_queue(name):
+    '''Gets an SQS queue of a specified name from AWS.'''
 
     sqs = boto3.resource("sqs")
     queue = sqs.get_queue_by_name(QueueName=name)
@@ -55,6 +62,7 @@ def get_queue(name):
 
 
 def send_message_to_queue(queue, message_body, message_attributes={}):
+    '''Sends a message to an SQS queue and returns the response from that action.'''
 
     group_id = getenv("message_id")
 
@@ -68,6 +76,8 @@ def send_message_to_queue(queue, message_body, message_attributes={}):
 
 
 def run_app(api_key=None, queue_name=None):
+    '''Runs the whole application'''
+
     with SetupEnv(api_key=api_key, queue_name=queue_name):
         try:
             search_term = input_search_term()
