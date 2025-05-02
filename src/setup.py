@@ -1,6 +1,7 @@
 import os
 from configparser import ConfigParser
 
+
 environ_list = [
     'api_key', 
     'queue_name',
@@ -12,6 +13,7 @@ environ_list = [
     'default_sort_by',
     'default_sort_order'
     ]
+
 
 def set_env_vars():
     config = ConfigParser()

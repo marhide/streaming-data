@@ -91,6 +91,7 @@ def match_sort_order_to_bool(sort_order=None):
 
     return reverse_order_bool
 
+
 def sort_message_content(results, sort_by=None, sort_order=None):
 
     sort_by = match_sort_by(sort_by)

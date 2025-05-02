@@ -157,7 +157,6 @@ class TestMatchSortOrderToBool:
         result = match_sort_order_to_bool('asc')
         assert result is False
 
-    
     def test_match_sort_order_to_bool_return_true_when_passed_desc_in_wrong_case(self):
         result = match_sort_order_to_bool('dEsc')
         assert result is True
@@ -214,6 +213,7 @@ class TestMatchSortOrderToBool:
         result = match_sort_order_to_bool()
         assert result is False
 
+
 test_result_list = [
     {'webPublicationDate': '2000-01-01', 'webTitle': 'title1', 'webUrl': 'https://www.theguardian.com/article1'},
     {'webPublicationDate': '2000-01-02', 'webTitle': 'title2', 'webUrl': 'https://www.theguardian.com/article2'},
@@ -242,7 +242,6 @@ test_unordered_title_list = [
     {'webPublicationDate': '', 'webTitle': 'title4', 'webUrl': ''},
     {'webPublicationDate': '', 'webTitle': 'title1', 'webUrl': ''}]
 
-# @pytest.mark.usefixtures('run_set_env_vars')
 class TestSortMessageContent():
     def test_sort_message_content_returns_list_when_given_a_correct_list_of_correct_dicts(self):
         result = sort_message_content(test_result_list)
@@ -259,8 +258,6 @@ class TestSortMessageContent():
     def test_sort_message_content_returns_list_in_asc_date_order_when_env_var_is_set_to_asc(self):
         os.environ['default_sort_order'] = 'asc'
         assert os.getenv('default_sort_order') == 'asc'
-        # expected_list = deepcopy(test_result_list)
-        # expected_list.reverse()
         result = sort_message_content(test_unordered_result_list)
         assert result == test_result_list
 
