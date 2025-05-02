@@ -92,7 +92,7 @@ run-checks: security-test run-black unit-test check-coverage
 
 ## create secrete tfvars file
 tfvars:
-	python -c 'from src.setup import create_secrets_tfvars_file; create_secrets_tfvars_file(queue_name="$(QUEUE_NAME)"+".fifo")'
+	python -c 'from src.setup import create_secrets_tfvars_file; create_secrets_tfvars_file(queue_name="$(SQS_QUEUE_NAME)"+".fifo")'
 
 ## terraform init and apply new infrastructure
 terraform-apply:

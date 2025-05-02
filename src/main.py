@@ -84,4 +84,8 @@ def run_app(api_key=None, queue_name=None):
 
 
 if __name__ == "__main__":
-    pprint(run_app())
+    api_key = getenv('GUARDIAN_API_KEY')
+    queue_name = getenv('SQS_QUEUE_NAME')
+
+
+    responose = run_app(api_key, queue_name)
