@@ -114,3 +114,7 @@ new-sqs-queue:
 run-app:
 	export PYTHONPATH=$(WD)
 	python src/main.py
+
+delete-sqs-queue:
+	$(call chdir,terraform)
+	terraform destroy
