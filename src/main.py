@@ -1,6 +1,7 @@
 from pprint import pprint
 from os import getenv
 from datetime import date
+import json
 
 import boto3
 
@@ -57,8 +58,10 @@ def send_message_to_queue(queue, message_body, message_attributes={}):
 
     group_id = getenv("message_id")
 
+    message_body_json = json.JSONEncoder().encode(message_body)
+
     response = queue.send_message(
-        MessageBody=message_body,
+        MessageBody=message_body_json,
         MessageAttributes=message_attributes,
         MessageGroupId=group_id,
     )
@@ -86,6 +89,4 @@ def run_app(api_key=None, queue_name=None):
 if __name__ == "__main__":
     api_key = getenv('GUARDIAN_API_KEY')
     queue_name = getenv('SQS_QUEUE_NAME')
-
-
     responose = run_app(api_key, queue_name)
