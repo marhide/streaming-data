@@ -58,10 +58,8 @@ def send_message_to_queue(queue, message_body, message_attributes={}):
 
     group_id = getenv("message_id")
 
-    message_body_json = json.JSONEncoder().encode(message_body)
-
     response = queue.send_message(
-        MessageBody=message_body_json,
+        MessageBody=message_body,
         MessageAttributes=message_attributes,
         MessageGroupId=group_id,
     )
