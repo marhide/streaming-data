@@ -1,16 +1,15 @@
 from pprint import pprint
 from os import getenv
+from datetime import date
 
 import boto3
 
 try:
     from src.get_message_from_api_request import get_message
     from src.setup import SetupEnv
-    from src.utils import validate_date
 except ImportError:
     from get_message_from_api_request import get_message
     from setup import SetupEnv
-    from utils import validate_date
 
 
 def input_search_term():
@@ -20,6 +19,14 @@ def input_search_term():
         search_term = getenv("default_search_term")
 
     return search_term
+
+
+def validate_date(date_text):
+    try:
+        date.fromisoformat(date_text)
+        return True
+    except ValueError:
+        raise ValueError("Incorrect data format, should be YYYY-MM-DD")
 
 
 def input_from_date():
