@@ -5,6 +5,9 @@ streaming-data is an application that gets data about articles from The Guardian
 
 ## How do you use it?
 
+This application will need [Python3](https://www.python.org/) and [Terraform](https://developer.hashicorp.com/terraform/install) to be installed in order to run.
+
+
 ### The Guardian API key:
 First you will need to generate a key for The Guardian's API at [open-platform.theguardian.com/access/](https://open-platform.theguardian.com/access/).
 
