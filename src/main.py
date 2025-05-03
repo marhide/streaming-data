@@ -25,7 +25,7 @@ def input_search_term():
 
 
 def validate_date(date_text):
-    '''Takes a date in the form of a string and checks if it is in yyyy-mm-dd format, raising and error if it is not.'''
+    '''Takes a date in the form of a string and checks if it is in YYYY-MM-DD format (ISO 8601), raising an error if it is not.'''
 
     try:
         date.fromisoformat(date_text)
@@ -40,7 +40,7 @@ def input_from_date():
     counter = 0
     while True:
         counter += 1
-        from_date = input("enter from date in format yyyy-mm-dd: ").strip()
+        from_date = input("Enter from date in format YYYY-MM-DD: ").strip()
         if from_date == "":
             return None
         try:
