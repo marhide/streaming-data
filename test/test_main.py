@@ -10,8 +10,6 @@ from fixtures import mock_sqs, run_set_env_vars, run_set_secret_env_vars, test_a
 os.environ["AWS_DEFAULT_REGION"] = "eu-west-2"
 
 
-
-
 @mock.patch('src.main.input', create=True)
 class TestInputSearchTerm:
     def test_input_search_term_returns_correct_search_term_that_is_input(self, mocked_input):
@@ -64,8 +62,6 @@ class TestInputSearchTerm:
     def test_input_raises_type_error_when_passed_arg_of_wrong_type(self, _):
         with pytest.raises(TypeError):
             input_search_term(9999)
-
-
 
 
 class TestValidateDate():
