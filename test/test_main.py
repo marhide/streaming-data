@@ -44,15 +44,27 @@ class TestInputSearchTerm:
         result = input_search_term()
         assert result == 'has a space'
 
-    def test_input_search_term_removes_trailing_space_from_input(self, mocked_input):
-        mocked_input.side_effect = ['has a space     ']
-        result = input_search_term()
-        assert result == 'has a space'
-
     def test_input_search_term_removes_leading_and_trailing_space_from_input(self, mocked_input):
         mocked_input.side_effect = ['         has a space           ']
         result = input_search_term()
         assert result == 'has a space'
+
+    def test_input_search_term_removes_trailing_space_from_arg(self, _):
+        result = input_search_term('has a space     ')
+        assert result == 'has a space'
+
+    def test_input_search_term_removes_leading_space_from_arg(self, _):
+        result = input_search_term('         has a space')
+        assert result == 'has a space'
+
+    def test_input_search_term_removes_leading_and_trailing_space_from_arg(self, _):
+        result = input_search_term('         has a space           ')
+        assert result == 'has a space'
+
+    def test_input_raises_type_error_when_passed_arg_of_wrong_type(self, _):
+        with pytest.raises(TypeError):
+            input_search_term(9999)
+
 
 
 

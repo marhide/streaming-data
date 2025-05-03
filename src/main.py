@@ -24,7 +24,7 @@ def input_search_term(search_term=None):
             search_term = getenv("default_search_term")
         return search_term.strip()
     else:
-        raise ValueError
+        raise TypeError
 
 
 def validate_date(date_text):
