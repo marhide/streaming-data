@@ -51,6 +51,8 @@ Once an SQS queue has been created, you can run the application, by using the co
 
 `make run-app`
 
+### Parameters and different uses
+
 
 ## About testing:
 Install the testing dependencies with the following command

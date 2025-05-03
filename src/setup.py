@@ -67,8 +67,6 @@ def deactivate():
             except:
                 raise Exception(f"{item} has not been set as an os.environ")
             
-    print('\ndeactivation successful')
-
 
 class SetupEnv():
     '''A class to be used as a context manager that sets all needed environmental variables and then deletes them when closing.'''

@@ -4,7 +4,7 @@ from os import getenv
 
 
 def create_request(search_term=None, from_date=None):
-    '''Creates and returns a request for the API using in the correct format using the URL, search term and from date.'''
+    '''Creates and returns a request for the API in the correct format using the URL, search term and from date.'''
 
     url = getenv("default_url")
     url += "q=" + search_term.replace(" ", "%20") if search_term else ""
@@ -57,7 +57,7 @@ def match_sort_by(sort_by=None, fn_has_ran=False):
         except:
             raise AttributeError
 
-    date_match_list = ['webpublicationdate', 'publicationdate', 'date']
+    date_match_list = ['webpublicationdate', 'publicationdate', 'date', 'from', 'fromdate', 'datefrom']
     title_match_list = ['webtitle', 'title', 'article', 'name']
     url_match_list = ['weburl', 'url']
 
@@ -105,12 +105,6 @@ def sort_message_content(results, sort_by=None, sort_order=None):
     '''Sorts and returns a list of article data by a specified key and returns the first 10 results.'''
 
     sort_by = match_sort_by(sort_by)
-
-    correct_sort_orders = ["asc", "desc"]
-
-    if sort_order not in correct_sort_orders:
-        sort_order = getenv("default_sort_order")
-
     reverse_order = match_sort_order_to_bool(sort_order)
 
     sorted_results = sorted(results, key=lambda result: result[sort_by], reverse=reverse_order)
