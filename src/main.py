@@ -68,9 +68,9 @@ def run_app(
 
             queue_name = getenv("queue_name")
 
-            print(
-                f"api key: {api_key}\nqueue_name: {queue_name}\nsearch_term: {search_term}\nfrom_date: {from_date}\nsort_by: {sort_by}\nsort_order: {sort_order}"
-            )
+            # print(
+            #     f"api key: {api_key}\nqueue_name: {queue_name}\nsearch_term: {search_term}\nfrom_date: {from_date}\nsort_by: {sort_by}\nsort_order: {sort_order}"
+            # )
 
             queue = get_queue(queue_name)
 
@@ -85,3 +85,4 @@ if __name__ == "__main__":
     api_key = getenv("GUARDIAN_API_KEY")
     queue_name = getenv("SQS_QUEUE_NAME")
     responose = run_app(api_key, queue_name)
+    print(f'Status code: {responose["ResponseMetadata"]["HTTPStatusCode"]}')
