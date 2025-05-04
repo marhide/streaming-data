@@ -5,6 +5,7 @@ secrets.ini
 secret_config.ini
 local_secrets.txt
 .env
+.DS_Store
 
 # Local .terraform directories
 **/.terraform/*
