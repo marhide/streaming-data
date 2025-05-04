@@ -13,7 +13,7 @@ except ImportError:
 
 
 def get_queue(queue_name):
-    '''Gets an SQS queue of a specified name from AWS.'''
+    """Gets an SQS queue of a specified name from AWS."""
 
     sqs = boto3.resource("sqs")
     queue = sqs.get_queue_by_name(QueueName=queue_name)
@@ -22,7 +22,7 @@ def get_queue(queue_name):
 
 
 def send_message_to_queue(queue, message_body):
-    '''Sends a message to an SQS queue and returns the response from that action.'''
+    """Sends a message to an SQS queue and returns the response from that action."""
 
     group_id = getenv("message_id")
 
@@ -35,9 +35,16 @@ def send_message_to_queue(queue, message_body):
     return response
 
 
-def run_app(api_key=None, queue_name=None, search_term=None, from_date=None, sort_by=None, sort_order=None):
-    '''Runs the whole application
+def run_app(
+        api_key=None,
+        queue_name=None,
+        search_term=None,
+        from_date=None,
+        sort_by=None,
+        sort_order=None):
     
+    """Runs the whole application
+
     Arguments:
     api_key -- The API key needed to access TheGuardian's API. 'test' should work in most cases.
     queue_name -- The name of the AWS SQS queue to send messages to.
@@ -45,18 +52,25 @@ def run_app(api_key=None, queue_name=None, search_term=None, from_date=None, sor
     from_date -- Only returns articles from the API pubished after this date. Has to be in ISO 8601 format (YYYY-MM-DD).
     sort_by -- The list of articles sent to the SQS queue will be ordered according to the sort by term's corresponding key.
     sort_order -- Whether the articles will be in ascending or descending order.
-    '''
+    """
 
     with SetupEnv(api_key=api_key, queue_name=queue_name):
         try:
             search_term = input_search_term(search_term)
             from_date = input_from_date(from_date)
 
-            message = get_message(search_term=search_term, from_date=from_date, sort_by=sort_by, sort_order=sort_order)
+            message = get_message(
+                search_term=search_term,
+                from_date=from_date,
+                sort_by=sort_by,
+                sort_order=sort_order,
+            )
 
             queue_name = getenv("queue_name")
 
-            print(f'api key: {api_key}\nqueue_name: {queue_name}\nsearch_term: {search_term}\nfrom_date: {from_date}\nsort_by: {sort_by}\nsort_order: {sort_order}')
+            print(
+                f"api key: {api_key}\nqueue_name: {queue_name}\nsearch_term: {search_term}\nfrom_date: {from_date}\nsort_by: {sort_by}\nsort_order: {sort_order}"
+            )
 
             queue = get_queue(queue_name)
 
@@ -68,6 +82,6 @@ def run_app(api_key=None, queue_name=None, search_term=None, from_date=None, sor
 
 
 if __name__ == "__main__":
-    api_key = getenv('GUARDIAN_API_KEY')
-    queue_name = getenv('SQS_QUEUE_NAME')
+    api_key = getenv("GUARDIAN_API_KEY")
+    queue_name = getenv("SQS_QUEUE_NAME")
     responose = run_app(api_key, queue_name)

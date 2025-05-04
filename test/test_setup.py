@@ -2,11 +2,22 @@ import os
 
 import pytest
 
-from src.setup import set_env_vars, set_secret_env_vars, create_secrets_tfvars_file, deactivate, SetupEnv
-from fixtures import run_set_env_vars, run_set_secret_env_vars, test_api_key, test_queue_name
+from src.setup import (
+    set_env_vars,
+    set_secret_env_vars,
+    create_secrets_tfvars_file,
+    deactivate,
+    SetupEnv,
+)
+from fixtures import (
+    run_set_env_vars,
+    run_set_secret_env_vars,
+    test_api_key,
+    test_queue_name,
+)
 
 
-@pytest.mark.usefixtures('run_set_env_vars')
+@pytest.mark.usefixtures("run_set_env_vars")
 class TestSetEnvVars:
     def test_set_env_vars_creates_correct_enivronmental_response_format(self):
         expected_response_format = "json"
@@ -34,7 +45,7 @@ class TestSetEnvVars:
         assert test_default_from_date == expected
 
 
-@pytest.mark.usefixtures('run_set_secret_env_vars')
+@pytest.mark.usefixtures("run_set_secret_env_vars")
 class TestSetSecretEnvVars:
     def test_set_secret_env_vars_creates_correct_enivronmental_api_key(self):
         expected_api_key = "test"
@@ -47,7 +58,7 @@ class TestSetSecretEnvVars:
         assert test_queue_name == expected_queue_name
 
 
-@pytest.mark.usefixtures('run_set_secret_env_vars')
+@pytest.mark.usefixtures("run_set_secret_env_vars")
 class TestCreateSecretTfvarsFile:
     def test_create_tfvars_file_creates_a_file(self):
         create_secrets_tfvars_file()
@@ -62,7 +73,7 @@ class TestCreateSecretTfvarsFile:
 
 
 class TestDeactivate:
-    @pytest.mark.usefixtures('run_set_secret_env_vars')
+    @pytest.mark.usefixtures("run_set_secret_env_vars")
     def test_deactivate_removes_secrets_tfvars_file(self):
         create_secrets_tfvars_file()
         assert os.path.exists("./terraform/secrets.auto.tfvars")
@@ -71,25 +82,25 @@ class TestDeactivate:
 
     def test_decativate_removes_environs(self):
         set_secret_env_vars(api_key=test_api_key, queue_name=test_queue_name)
-        assert os.getenv('api_key') == test_api_key
-        assert os.getenv('queue_name') == test_queue_name + '.fifo'
+        assert os.getenv("api_key") == test_api_key
+        assert os.getenv("queue_name") == test_queue_name + ".fifo"
         deactivate()
-        assert os.getenv('api_key') is None
-        assert os.getenv('queue_name') is None
+        assert os.getenv("api_key") is None
+        assert os.getenv("queue_name") is None
 
 
 class TestSetupEnv:
     def test_setupenv_sets_correct_api_key_when_input_as_arg(self):
         with SetupEnv(api_key=test_api_key, queue_name=test_queue_name):
-            assert os.getenv('api_key') == 'test'
+            assert os.getenv("api_key") == "test"
 
     def test_setupenv_sets_correct_queue_name_when_input_as_arg(self):
         with SetupEnv(api_key=test_api_key, queue_name=test_queue_name):
-            assert os.getenv('queue_name') == 'test_queue_name.fifo'
+            assert os.getenv("queue_name") == "test_queue_name.fifo"
 
     def test_setupenv_deletes_envs_after_they_have_been_setup_correctly(self):
         with SetupEnv(api_key=test_api_key, queue_name=test_queue_name):
-            assert os.getenv('api_key') == 'test'
-            assert os.getenv('queue_name') == 'test_queue_name.fifo'
-        assert os.getenv('api_key') is None
-        assert os.getenv('queue_name') is None
+            assert os.getenv("api_key") == "test"
+            assert os.getenv("queue_name") == "test_queue_name.fifo"
+        assert os.getenv("api_key") is None
+        assert os.getenv("queue_name") is None

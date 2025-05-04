@@ -1,3 +1,5 @@
+# The Guardian API to AWS SQS data streaming project
+
 ## What is it and what does it do?
 
 streaming-data is an application that gets data about articles from The Guardian's API and sends them to an AWS SQS queue.

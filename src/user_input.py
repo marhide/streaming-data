@@ -1,8 +1,9 @@
 from datetime import date
 from os import getenv
 
+
 def input_search_term(search_term=None):
-    '''Ask the user to input a search term and returns it. Returns the deafault search term from the config file if the user enters an empty string.'''
+    """Ask the user to input a search term and returns it. Returns the deafault search term from the config file if the user enters an empty string."""
 
     if search_term is None:
         search_term = input("Enter search term: ").strip()
@@ -16,7 +17,7 @@ def input_search_term(search_term=None):
 
 
 def validate_date(date_text):
-    '''Takes a date in the form of a string and checks if it is in YYYY-MM-DD format (ISO 8601), raising an error if it is not.'''
+    """Takes a date in the form of a string and checks if it is in YYYY-MM-DD format (ISO 8601), raising an error if it is not."""
 
     try:
         date.fromisoformat(date_text)
@@ -26,7 +27,7 @@ def validate_date(date_text):
 
 
 def input_from_date(from_date=None):
-    '''Ask the user the input a date and only returns it is it is in the correct format.'''
+    """Ask the user the input a date and only returns it is it is in the correct format."""
 
     if from_date is None:
         counter = 0
