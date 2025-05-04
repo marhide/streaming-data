@@ -70,7 +70,7 @@ class TestValidateDate():
         test_date = "1999-01-01"
         try:
             validate_date(test_date)
-        except Exception as e:
+        except ValueError as e:
             assert False, f"raised an exception {e}"
 
     def test_validate_date_raises_error_if_given_incorrect_date_in_correct_format(self):
