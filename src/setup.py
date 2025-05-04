@@ -16,7 +16,7 @@ environ_list = [
 
 
 def set_env_vars():
-    """Reads values from the config file and sets them as environmental variables."""
+    """Reads values from the config file and sets them as environmental variables. Sets some other variables too"""
 
     config = ConfigParser()
     config.read("config.ini")
@@ -25,6 +25,9 @@ def set_env_vars():
         if item in config["config"]:
             os.environ[item] = config["config"][item]
 
+    os.environ['response_format'] = 'json'
+    os.environ['message_id'] = 'guardian_content'
+    os.environ['default_url'] = 'https://content.guardianapis.com/search?'
 
 def set_secret_env_vars(api_key=None, queue_name=None):
     """Sets it's given arguments as environmental variables. Prompts the user to input them if not passed any."""
