@@ -36,7 +36,16 @@ def send_message_to_queue(queue, message_body):
 
 
 def run_app(api_key=None, queue_name=None, search_term=None, from_date=None, sort_by=None, sort_order=None):
-    '''Runs the whole application'''
+    '''Runs the whole application
+    
+    Arguments:
+    api_key -- The API key needed to access TheGuardian's API. 'test' should work in most cases.
+    queue_name -- The name of the AWS SQS queue to send messages to.
+    search_term -- Results from the API will only include this term.
+    from_date -- Only returns articles from the API pubished after this date. Has to be in ISO 8601 format (YYYY-MM-DD).
+    sort_by -- The list of articles sent to the SQS queue will be ordered according to the sort by term's corresponding key.
+    sort_order -- Whether the articles will be in ascending or descending order.
+    '''
 
     with SetupEnv(api_key=api_key, queue_name=queue_name):
         try:
