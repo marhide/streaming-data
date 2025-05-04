@@ -104,3 +104,15 @@ class TestInputFromDate:
         mocked_input.side_effect = ['not a date' for _ in range(9)] + ['1999-01-01']
         result = input_from_date()
         assert result == '1999-01-01'
+
+    def test_input_from_date_returns_correct_date_when_given_correct_date_as_arg(self, _):
+        result = input_from_date('1991-06-06')
+        assert result == '1991-06-06'
+
+    def test_input_from_date_raises_value_error_when_given_date_in_wrong_format_as_arg(self, _):
+        with pytest.raises(ValueError):
+            input_from_date('9999-99-99')
+        
+    def test_input_from_date_raises_type_error_when_given_wrong_data_type_as_arg(self, _):
+        with pytest.raises(TypeError):
+            input_from_date(['a list'])
