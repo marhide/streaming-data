@@ -66,10 +66,11 @@ def deactivate():
                 os.environ.pop(item)
             except:
                 raise Exception(f"{item} has not been set as an os.environ")
-            
+
 
 class SetupEnv():
     '''A class to be used as a context manager that sets all needed environmental variables and then deletes them when closing.'''
+    
     def __init__(self, api_key, queue_name):
         self.api_key = api_key
         self.queue_name = queue_name

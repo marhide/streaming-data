@@ -1,68 +1,22 @@
-from pprint import pprint
 from os import getenv
-from datetime import date
-import json
 
 import boto3
 
 try:
     from src.get_message_from_api_request import get_message
+    from src.user_input import input_search_term, input_from_date
     from src.setup import SetupEnv
 except ImportError:
     from get_message_from_api_request import get_message
+    from user_input import input_search_term, input_from_date
     from setup import SetupEnv
 
 
-def input_search_term(search_term=None):
-    '''Ask the user to input a search term and returns it. Returns the deafault search term from the config file if the user enters an empty string.'''
-
-    if search_term is None:
-        search_term = input("enter search term: ").strip()
-
-    if isinstance(search_term, str):
-        if search_term == "":
-            search_term = getenv("default_search_term")
-        return search_term.strip()
-    else:
-        raise TypeError
-
-
-def validate_date(date_text):
-    '''Takes a date in the form of a string and checks if it is in YYYY-MM-DD format (ISO 8601), raising an error if it is not.'''
-
-    try:
-        date.fromisoformat(date_text)
-        return date_text
-    except ValueError:
-        raise ValueError("Incorrect data format, should be YYYY-MM-DD")
-
-
-def input_from_date(from_date=None):
-    '''Ask the user the input a date and only returns it is it is in the correct format.'''
-
-    if from_date is None:
-        counter = 0
-        while True:
-            counter += 1
-            from_date = input("Enter from date in format YYYY-MM-DD: ").strip()
-            if from_date == "":
-                return None
-            try:
-                validate_date(from_date)
-                return from_date
-            except:
-                print("incorrect date format")
-                if counter >= 3:
-                    print("hint: leave blank for no from date limit in search results")
-    else:
-        return validate_date(from_date)
-
-
-def get_queue(name):
+def get_queue(queue_name):
     '''Gets an SQS queue of a specified name from AWS.'''
 
     sqs = boto3.resource("sqs")
-    queue = sqs.get_queue_by_name(QueueName=name)
+    queue = sqs.get_queue_by_name(QueueName=queue_name)
 
     return queue
 
@@ -88,6 +42,7 @@ def run_app(api_key=None, queue_name=None, search_term=None, from_date=None, sor
         try:
             search_term = input_search_term(search_term)
             from_date = input_from_date(from_date)
+
             message = get_message(search_term=search_term, from_date=from_date, sort_by=sort_by, sort_order=sort_order)
 
             queue_name = getenv("queue_name")
