@@ -1,8 +1,5 @@
 # The Guardian API to AWS SQS data streaming project
-
-## What is it and what does it do?
-
-'streaming-data' is an application that gets data about articles from The Guardian's API and sends them to an AWS SQS queue.
+An application that gets data about articles from the The Guardian's API and sends it to an AWS SQS queue.
 
 ## How do you use it?
 
@@ -56,8 +53,10 @@ Once an SQS queue has been created, you can run the application, by using the co
 
 Alternatively, the application can be used as a funtion as part of a component of a larger programme.
 
-`from src.main import run_app`
-`run_app()`
+```
+from src.main import run_app
+run_app()
+```
 
 ### Parameters
 All arguments passed into the `run_app()` function should be strings.
