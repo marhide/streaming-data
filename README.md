@@ -25,15 +25,10 @@ If you don't have one already, create an IAM user in AWS with permissions that g
 Create a secret access key for this IAM user if there isn't one already. You will then need to export these environmental variables to allow the application to run commands as the IAM user.
 
 ```
-
-export AWS_DEFAULT_REGION=[the aws region you would like to use eg. 'eu-west-2']
-
-export AWS_ACCESS_KEY_ID=[your aws access key id]
-
-export AWS_SECRET_ACCESS_KEY=[your aws secret access key]
-
+export AWS_DEFAULT_REGION=[AWS region you would like to use eg. 'eu-west-2']
+export AWS_ACCESS_KEY_ID=[AWS access key ID]
+export AWS_SECRET_ACCESS_KEY=[AWS secret access key]
 ```
-
 
 #### AWS SQS queue
 
@@ -68,7 +63,6 @@ Alternatively, the application can be used as a function as part of a component 
 from src.main import run_app
 
 run_app()
-
 ```
 
 
@@ -94,7 +88,7 @@ Only returns articles from the API punished after this date. Has to be in [ISO 8
 
 ##### `sort_by`
 
-The list of articles sent to the SQS queue will be ordered according to the sort by term's corresponding key.
+The list of articles sent to the SQS queue will be ordered according to the sort by term's corresponding key. To sort by publication date, use `webPublicationDate`, `publicationdate`, `date`, `from`, `fromdate` or `datefrom`. To sort by article title, use `webTitle`, `title`, `article` or `name`. To sort by URL, use `webUrl` or `url`.
 
 ##### `sort_order`
 
@@ -103,23 +97,14 @@ Whether the articles will be in ascending or descending order. Use `asc` or `asc
 ####  Example:
 
 ```
-
 run_app(
-
 api_key="test",
-
 queue_name="my_queue_name",
-
 search_term="machine learning",
-
 from_date="2000-01-01",
-
 sort_by="title",
-
 sort_order="asc"
-
 )
-
 ```
 
 When running the application with `make run-app`, you will be asked to input the API key and SQS queue name if they have not been exported as environmental variables during the setup. The user can skip inputting a search term or from date by pressing enter, submitting an empty string. The program will take the default search term/from date from the config if this happens.
@@ -131,15 +116,10 @@ The default search functionality of the application can be changed through the `
 ####  Example:
 
 ```
-
 default_search_term = machine learning
-
 default_from_date = 1900-01-01
-
 default_sort_by = webPublicationDate
-
 default_sort_order = desc
-
 ```
 
 These will be used when the user inputs an empty string or when the `run_app()` function is not passed an argument.
