@@ -144,7 +144,7 @@ default_sort_order = desc
 
 These will be used when the user inputs an empty string or when the `run_app()` function is not passed an argument.
 
-### Testing
+## Testing
 
 Install the testing dependencies with the following command
 
