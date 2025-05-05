@@ -121,6 +121,15 @@ def sort_message_content(results, sort_by=None, sort_order=None):
     return message_body
 
 
+def convert_message_to_json(message_body, header):
+    '''Takes a message body and a header and returns them in JSON format'''
+
+    header_json_dict = {header: message_body}
+    json_message = json.dumps(header_json_dict)
+    
+    return json_message
+
+
 def get_message(search_term=None, from_date=None, sort_by=None, sort_order=None):
     """Creates a search query for the API and sorts the response and returns it."""
 
@@ -129,6 +138,8 @@ def get_message(search_term=None, from_date=None, sort_by=None, sort_order=None)
     formatted_results = map(format_result, results)
 
     message_body = sort_message_content(formatted_results, sort_by, sort_order)
-    message = str({request[0]: message_body})
 
-    return message
+    header = request[0]
+    json_message = convert_message_to_json(message_body, header)
+
+    return json_message
