@@ -2,15 +2,14 @@
 
 ## What is it and what does it do?
 
-streaming-data is an application that gets data about articles from The Guardian's API and sends them to an AWS SQS queue.
-
+'streaming-data' is an application that gets data about articles from The Guardian's API and sends them to an AWS SQS queue.
 
 ## How do you use it?
 
-This application will need [Python3](https://www.python.org/) and [Terraform](https://developer.hashicorp.com/terraform/install) to be installed in order to run.
+This application will need [Python](https://www.python.org/) and [Terraform](https://developer.hashicorp.com/terraform/install) to be installed in order to run.
 
 
-### The Guardian API key:
+#### The Guardian API key:
 First you will need to generate a key for The Guardian's API at [open-platform.theguardian.com/access/](https://open-platform.theguardian.com/access/).
 
 Make sure to save the API key somewhere as it is needed via ether user input or to be set as an environmental variable run the application. To set the Guardian API key as an environmental variable, run the command
@@ -19,19 +18,19 @@ Make sure to save the API key somewhere as it is needed via ether user input or 
 
 This will make it so that the application will use this API key by default every time it is ran. *This is optional and can be skipped if you would like to enter an API key via user input every time the application is ran.*
 
-### AWS IAM User
+#### AWS IAM User
 If you don't have one already, create an IAM user in AWS with permissions that grants full access to AWS's SQS.
 Create a secret access key for this IAM user if there isn't one already.
 
 You will then need to export these environmental varibales to allow the application to run commands as the IAM user.
 
-`export AWS_DEFAULT_REGION=[the aws region you would like to use eg. 'eu-west-2']`
+```
+export AWS_DEFAULT_REGION=[the aws region you would like to use eg. 'eu-west-2']
+export AWS_ACCESS_KEY_ID=[your aws access key id]
+export AWS_SECRET_ACCESS_KEY=[your aws secret access key]
+```
 
-`export AWS_ACCESS_KEY_ID=[your aws access key id]`
-
-`export AWS_SECRET_ACCESS_KEY=[your aws secret access key]`
-
-### AWS SQS queue
+#### AWS SQS queue
 Now choose a name for the SQS queue and export it as an environmental variable too.
 
 `export SQS_QUEUE_NAME=[the name you want for your sqs queue]`
@@ -60,30 +59,52 @@ Alternatively, the application can be used as a funtion as part of a component o
 `from src.main import run_app`
 `run_app()`
 
-### Parameters and different uses
+### Parameters
+All arguments passed into the `run_app()` function should be strings.
 
-api_key -- The API key needed to access TheGuardian's API. 'test' should work in most cases.
-queue_name -- The name of the AWS SQS queue to send messages to.
-search_term -- Results from the API will only include this term.
-from_date -- Only returns articles from the API pubished after this date. Has to be in ISO 8601 format (YYYY-MM-DD).
-sort_by -- The list of articles sent to the SQS queue will be ordered according to the sort by term's corresponding key.
-sort_order -- Whether the articles will be in ascending or descending order.
+##### `api_key` 
+The API key needed to access TheGuardian's API. 'test' should work in most cases.
 
-All arguments passed into the run_app function should be strings.
+##### `queue_name` 
+The name of the AWS SQS queue to send messages to.
 
-Example:
+##### `search_term` 
+Results from the API will only include this term.
 
-`run_app(api_key='test', queue_name='my_queue_name', search_term='machine learning', from_date='2000-01-01', sort_by='title', sort_order='asc')`
+##### `from_date` 
+Only returns articles from the API pubished after this date. Has to be in [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format (YYYY-MM-DD).
 
-#### Config file
-The default search funtionality of the application can be changed through the config.ini 
+##### `sort_by` 
+The list of articles sent to the SQS queue will be ordered according to the sort by term's corresponding key.
 
-`default_search_term = machine learning`
-`default_from_date = 1900-01-01`
-`default_sort_by = webPublicationDate`
-`default_sort_order = desc`
+##### `sort_order` 
+Whether the articles will be in ascending or descending order. Use `asc` or `ascending` for the articles to be returned in ascending order. Use `desc` or `descending` for descending order.
 
-These will be used when the user inputs an empty string or when the run_app function is not passed an argument.
+
+####  Example:
+```
+run_app(
+    api_key="test", 
+    queue_name="my_queue_name", 
+    search_term="machine learning", 
+    from_date="2000-01-01", 
+    sort_by="title", 
+    sort_order="asc"
+    )
+```
+
+### Config file
+The default search funtionality of the application can be changed through the `config.ini` file.
+
+####  Example:
+```
+default_search_term = machine learning
+default_from_date = 1900-01-01
+default_sort_by = webPublicationDate
+default_sort_order = desc
+```
+
+These will be used when the user inputs an empty string or when the `run_app()` function is not passed an argument.
 
 ## About testing:
 Install the testing dependencies with the following command
@@ -93,3 +114,7 @@ Install the testing dependencies with the following command
 To run the test, use the command
 
 `make unit-test`
+
+To check test coverage run
+
+`make check-coverage`
