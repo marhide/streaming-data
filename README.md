@@ -137,6 +137,31 @@ Each object in the array will be in the format:
 }
 ```
 
+#### Example:
+
+```
+{
+    "https://content.guardianapis.com/search?q=machine%20learning": 
+        [
+            {
+                "webPublicationDate": "2025-04-29T14:15:50Z", 
+                "webTitle": "The Smashing Machine: Dwayne Johnson fights for an Oscar in first trailer",
+                "webUrl": "https://www.theguardian.com/film/2025/apr/29/smashing-machine-dwayne-rock-johnson-movie"
+            },
+            {
+                "webPublicationDate": "2025-04-29T14:00:47Z",
+                "webTitle": "Sage Bambino Plus coffee machine review: the perfect espresso machine for beginners",
+                "webUrl": "https://www.theguardian.com/thefilter/2025/apr/29/sage-bambino-plus-coffee-espresso-machine-review-uk"
+            },    
+            {
+                "webPublicationDate": "2025-04-23T05:00:10Z",
+                "webTitle": "Government pauses plans to ease slot machine rules across Great Britain",
+                "webUrl": "https://www.theguardian.com/society/2025/apr/23/government-pauses-plans-to-ease-slot-machine-rules-across-great-britain"
+            }
+    ]
+}
+```
+
 ## Testing
 
 Install the testing dependencies with the following command
