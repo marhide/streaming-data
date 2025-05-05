@@ -162,6 +162,8 @@ Each object in the array will be in the format:
 }
 ```
 
+All messages sent to the SQS queue will have the message group ID of `guardian-content`.
+
 ## Testing
 
 Install the testing dependencies with the following command
