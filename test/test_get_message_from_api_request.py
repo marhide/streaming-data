@@ -1,4 +1,5 @@
 import os
+import json
 
 import pytest
 from copy import deepcopy
@@ -10,6 +11,8 @@ from src.get_message_from_api_request import (
     match_sort_by,
     match_sort_order_to_bool,
     sort_message_content,
+    convert_message_to_json,
+    get_message
 )
 
 from src.setup import set_secret_env_vars
@@ -415,3 +418,16 @@ class TestSortMessageContent:
                 test_unordered_title_list, sort_by=test_sort_by, sort_order="asc"
             )
             assert result == test_result_title_list
+
+
+class TestConvertMessageToJson:
+    def test_convert_message_to_json_returns_valid_json_when_passed_corect_args(self):
+        header = 'header'
+        message_body = 'message_body'
+        result = convert_message_to_json(message_body, header)
+
+        try:
+            json.loads(result)
+            assert True
+        except:
+            assert False
