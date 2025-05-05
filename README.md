@@ -44,17 +44,46 @@ To create a virtual environment and to install dependencies needed for the appli
 `make dev-setup`
 
 
-If there isn't already an SQS queue for the application to send the results from the Guardian API to, you will have to create one with the following command. This SQS queue will have the same name as the value of the `SQS_QUEUE_NAME` variable.
+If there is not an SQS queue for the application to send the results from the Guardian API to already, you will have to create one with the following command. 
 
 `make new-sqs-queue`
+
+This SQS queue will have the same name as the value of the `SQS_QUEUE_NAME` variable. If the value of the SQS queue enivronmental variable has been changed, the current existing queue will be deleted and a new queue with the new name will be created when this command is excecuted.
 
 ### Running the application
 Once an SQS queue has been created, you can run the application, by using the command
 
 `make run-app`
 
+Alternatively, the application can be used as a funtion as part of a component of a larger programme.
+
+`from src.main import run_app`
+`run_app()`
+
 ### Parameters and different uses
 
+api_key -- The API key needed to access TheGuardian's API. 'test' should work in most cases.
+queue_name -- The name of the AWS SQS queue to send messages to.
+search_term -- Results from the API will only include this term.
+from_date -- Only returns articles from the API pubished after this date. Has to be in ISO 8601 format (YYYY-MM-DD).
+sort_by -- The list of articles sent to the SQS queue will be ordered according to the sort by term's corresponding key.
+sort_order -- Whether the articles will be in ascending or descending order.
+
+All arguments passed into the run_app function should be strings.
+
+Example:
+
+`run_app(api_key='test', queue_name='my_queue_name', search_term='machine learning', from_date='2000-01-01', sort_by='title', sort_order='asc')`
+
+#### Config file
+The default search funtionality of the application can be changed through the config.ini 
+
+`default_search_term = machine learning`
+`default_from_date = 1900-01-01`
+`default_sort_by = webPublicationDate`
+`default_sort_order = desc`
+
+These will be used when the user inputs an empty string or when the run_app function is not passed an argument.
 
 ## About testing:
 Install the testing dependencies with the following command
