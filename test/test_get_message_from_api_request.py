@@ -237,6 +237,34 @@ class TestMatchSortOrderToBool:
         result = match_sort_order_to_bool()
         assert result is False
 
+    def test_match_sort_order_returns_false_for_ascending(self):
+        result = match_sort_order_to_bool('ascending')
+        assert result is False
+
+    def test_match_sort_order_returns_true_for_descending(self):
+        result = match_sort_order_to_bool('descending')
+        assert result is True
+
+    def test_match_sort_order_returns_false_for_ascending_wrong_caps(self):
+        result = match_sort_order_to_bool('asCendIng')
+        assert result is False
+
+    def test_match_sort_order_returns_true_for_descending_wrong_caps(self):
+        result = match_sort_order_to_bool('descendiNg')
+        assert result is True
+
+    def test_match_sort_order_returns_false_for_ascending_set_in_env_vars(self):
+        os.environ["default_sort_order"] = "ascending"
+        assert os.getenv("default_sort_order") == "ascending"
+        result = match_sort_order_to_bool()
+        assert result is False
+
+    def test_match_sort_order_returns_false_for_ascending_set_in_env_vars_with_wrong_caps(self):
+        os.environ["default_sort_order"] = "AscendiNg"
+        assert os.getenv("default_sort_order") == "AscendiNg"
+        result = match_sort_order_to_bool()
+        assert result is False
+
 
 test_result_list = [
     {

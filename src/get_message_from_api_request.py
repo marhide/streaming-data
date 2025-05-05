@@ -89,7 +89,7 @@ def match_sort_by(sort_by=None, fn_has_ran=False):
 def match_sort_order_to_bool(sort_order=None):
     """Matches a sort order type, eg. 'asc', to a boolean and returns the boolean value."""
 
-    correct_sort_orders = ["asc", "desc"]
+    correct_sort_orders = ["asc", "ascending", "desc", "descending"]
 
     if isinstance(sort_order, str):
         sort_order = sort_order.lower()
@@ -100,7 +100,7 @@ def match_sort_order_to_bool(sort_order=None):
             sort_order = sort_order.lower()
 
     if sort_order in correct_sort_orders:
-        reverse_order_bool = sort_order != "asc"
+        reverse_order_bool = sort_order not in ["asc", "ascending"]
     else:
         reverse_order_bool = True
 
