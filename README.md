@@ -1,6 +1,6 @@
 # The Guardian API to AWS SQS Data Streaming Project
 
-An application that gets data about articles from the The Guardian's API and sends it to an AWS SQS queue.
+An application that gets data about articles from the The Guardian's API and sends it as a message to an AWS SQS queue.
 
 ## How do you use it?
 
@@ -123,6 +123,19 @@ default_sort_order = desc
 ```
 
 These will be used when the user inputs an empty string or when the `run_app()` function is not passed an argument.
+
+## Message information
+
+The messages sent to the SQS queue will be in JSON format. It will have a key of the URL used to search the API and the value will be an array of objects with information about a specific article.
+Each object in the array will be in the format:
+
+```
+{
+    "webPublicationDate": "[publication date of article]",
+    "webTitle": "[title of article]",
+    "webUrl": "[URL of article on The Guardian's website]"
+}
+```
 
 ## Testing
 
