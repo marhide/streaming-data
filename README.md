@@ -51,6 +51,14 @@ If there is not an SQS queue for the application to send the results from the Gu
 
 This SQS queue will have the same name as the value of the `SQS_QUEUE_NAME` variable. If the value of the SQS queue environmental variable has been changed, the current existing queue will be deleted and a new queue with the new name will be created when this command is executed.
 
+#### Delete AWS infrastructure
+
+To delete the SQS queue, run the command
+
+`make delete-sqs-queue`
+
+This will run `terraform destroy`. To do this manually, navigate to the terraform folder and run command `terraform destroy`.
+
 ### Running the application
 
 Once an SQS queue has been created, you can run the application, by using the command
