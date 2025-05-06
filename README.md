@@ -51,7 +51,7 @@ If there is not an SQS queue for the application to send the results from the Gu
 
 This SQS queue will have the same name as the value of the `SQS_QUEUE_NAME` variable. If the value of the SQS queue environmental variable has been changed, the current existing queue will be deleted and a new queue with the new name will be created when this command is executed.
 
-#### Delete AWS infrastructure
+### Delete AWS infrastructure
 
 To delete the SQS queue, run the command
 
