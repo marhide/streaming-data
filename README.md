@@ -34,7 +34,7 @@ export AWS_SECRET_ACCESS_KEY=[AWS secret access key]
 
 Now choose a name for the SQS queue and export it as an environmental variable too.
 
-`export SQS_QUEUE_NAME=[the name you want for your sqs queue]`
+`export SQS_QUEUE_NAME=[the name you want for your SQS queue]`
 
 *Hint: When exporting these environmental variables, don't include the square brackets or quotation marks.*
 
@@ -57,7 +57,7 @@ Once an SQS queue has been created, you can run the application, by using the co
 
 `make run-app`
 
-Alternatively, the application can be used as a function as part of a component of a larger programme.
+Alternatively, the application can be used as a function as part of a component of a larger program.
 
 ```
 from src.main import run_app
