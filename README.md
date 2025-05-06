@@ -119,7 +119,7 @@ When running the application with `make run-app`, you will be asked to input the
 
 ### Config file
 
-The default search functionality of the application can be changed through the `config.ini` file. When the application is being ran with `make run-app`, the only way to chage the sort by and sort order is through the config file.
+The default search functionality of the application can be changed through the `config.ini` file. When the application is being ran with `make run-app`, the only way to change the sort by and sort order is through the config file.
 
 ####  Example:
 
