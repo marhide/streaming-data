@@ -14,7 +14,7 @@ First you will need to generate a key for The Guardian's API at [open-platform.t
 
 Make sure to save the API key somewhere as it is needed via ether user input or to be set as an environmental variable run the application. To set the Guardian API key as an environmental variable, run the command
 
-`export GUARDIAN_API_KEY=[you guardian api key]`
+`export GUARDIAN_API_KEY=[your API key]`
 
 This will make it so that the application will use this API key by default every time it is ran. *This is optional and can be skipped if you would like to enter an API key via user input every time the application is ran.*
 
@@ -72,7 +72,7 @@ All arguments passed into the `run_app()` function should be strings.
 
 ##### `api_key`
 
-The API key needed to access TheGuardian's API. 'test' should work in most cases.
+The API key needed to access TheGuardian's API. `test` should work in most cases.
 
 ##### `queue_name`
 
