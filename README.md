@@ -106,12 +106,12 @@ Whether the articles will be in ascending or descending order. Use `asc` or `asc
 
 ```
 run_app(
-api_key="test",
-queue_name="my_queue_name",
-search_term="machine learning",
-from_date="2000-01-01",
-sort_by="title",
-sort_order="asc"
+    api_key="test",
+    queue_name="my_queue_name",
+    search_term="machine learning",
+    from_date="2000-01-01",
+    sort_by="title",
+    sort_order="asc"
 )
 ```
 
